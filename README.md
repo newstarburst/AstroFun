@@ -19,6 +19,16 @@ Pick a start and a destination. It answers with:
 Transfers are planned against the real timetable, not a guess: it takes your actual arrival time in
 Fira, allows five minutes to walk between bays, and finds the next connecting departure.
 
+Tap **I'm taking this trip** and the plan is pinned: it stops rolling forward to the next
+departure and starts tracking you instead. Completed steps grey out, the step you are on is
+highlighted with a live countdown, and on a two-bus journey the transfer step shows the genuine
+next connection from Fira — recomputed against the clock, so a missed bus self-corrects rather
+than leaving you to re-enter the trip. The pinned trip survives closing the app and expires at the
+end of the day.
+
+Because the app cannot see whether you actually boarded, both corrections are one tap: *I'm on
+this bus already* and *I did not get on that bus*.
+
 Everything else lives behind one collapsed **Need to know** panel — cash only, pay per bus, kids'
 fares, phone numbers.
 

@@ -147,6 +147,40 @@
   }
   .jrow + .jrow .jlbl { opacity: .6; }
 
+  .livenote {
+    margin-top: .7rem; padding-top: .7rem; border-top: 1px dashed var(--accent);
+    font-size: .9rem; font-weight: 600; color: var(--accent-ink); opacity: .9;
+  }
+  .leave.bad .jtime, .leave.bad .jlbl, .leave.bad .jnote, .leave.bad .livenote { color: var(--oxide); }
+  .leave.bad .jrow + .jrow, .leave.bad .livenote { border-color: var(--oxide); }
+
+  /* step states while a trip is running */
+  .steps li.done { opacity: .45; }
+  .steps li.done .dot { background: var(--ink-3); }
+  .steps li.active { background: var(--accent-soft); }
+  .steps li.active .step-main { color: var(--accent-ink); }
+  .steps li.active .step-sub { color: var(--ink); }
+  .live {
+    display: block; margin-top: .4rem; font-size: .92rem; font-weight: 700;
+    color: var(--accent-ink); background: var(--card); border: 1px solid var(--accent);
+    border-radius: 5px; padding: .3rem .5rem;
+  }
+
+  /* actions */
+  .foot-act { padding: .9rem 1.1rem; border-top: 1px solid var(--rule); text-align: center; }
+  .go, .reset {
+    width: 100%; font-family: var(--ui); font-size: 1rem; font-weight: 700;
+    padding: .8rem 1rem; border-radius: 8px; cursor: pointer; border: 1px solid var(--accent);
+  }
+  .go { background: var(--accent); color: var(--ground); }
+  .reset { background: transparent; color: var(--accent-ink); }
+  .go:active, .reset:active { transform: scale(.98); }
+  .go-hint { display: block; margin-top: .45rem; font-size: .78rem; color: var(--ink-3); }
+  .linkbtn {
+    background: none; border: 0; color: var(--oxide); font-family: var(--ui);
+    font-size: .88rem; font-weight: 600; text-decoration: underline; cursor: pointer; padding: 0;
+  }
+
   .leave.bad { background: var(--oxide-soft); }
   .leave.bad .lbl, .leave.bad .t, .leave.bad .cd { color: var(--oxide); }
 
@@ -434,14 +468,253 @@
       elLater = document.getElementById("later"),
       elNow = document.getElementById("now");
 
+  /* A trip the traveller has actually started. Until one is pinned the plan
+     keeps rolling forward to the next departure; once pinned it holds still and
+     every step reports live status, including the connection at Fira. */
+  var trip = null;
+  var STORE = "santorini-bus-trip";
+
+  function dayStamp() {
+    try {
+      return +new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Athens", year: "numeric", month: "2-digit", day: "2-digit" })
+        .format(new Date()).split("/").reverse().join("");
+    } catch (e) {
+      var d = new Date();
+      return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+    }
+  }
+  function saveTrip() {
+    try {
+      if (trip) localStorage.setItem(STORE, JSON.stringify(trip));
+      else localStorage.removeItem(STORE);
+    } catch (e) { /* file:// storage can be blocked; in-memory still works */ }
+  }
+  function loadTrip() {
+    try {
+      var raw = localStorage.getItem(STORE);
+      if (!raw) return;
+      var t = JSON.parse(raw);
+      if (t && t.day === dayStamp() && R[t.to !== "fira" ? t.to : t.from]) {
+        trip = t;
+        elFrom.value = t.from; elTo.value = t.to;
+      } else { localStorage.removeItem(STORE); }
+    } catch (e) {}
+  }
+
+  function startTrip(from, to, p) {
+    trip = {
+      day: dayStamp(), from: from, to: to, fare: p.fare, leg2Locked: null, boarded2: false,
+      legs: p.legs.map(function (l) {
+        return { route: l.route, dep: l.dep.m, exp: !!l.dep.exp, ride: l.ride, fare: l.fare, from: l.from };
+      })
+    };
+    saveTrip(); render();
+  }
+  function endTrip() { trip = null; saveTrip(); render(); }
+
+  /* Where the traveller is in a pinned trip, recomputed on every tick. */
+  function progress(now) {
+    var legs = trip.legs, l1 = legs[0];
+    var o = { legs: legs, firaArr: l1.dep + l1.ride, dep1: l1.dep };
+
+    if (legs.length === 1) {
+      o.arrive = l1.dep + l1.ride;
+      o.phase = now < l1.dep ? "wait1" : (now < o.arrive ? "ride1" : "done");
+      return o;
+    }
+
+    var list = times(R[legs[1].route].out), dep2;
+    if (trip.leg2Locked !== null) {
+      dep2 = trip.leg2Locked;
+    } else {
+      /* Before reaching Fira this is the planned connection; once there it
+         becomes the genuine next departure, so a missed bus self-corrects. */
+      var n = nextAfter(list, Math.max(o.firaArr + CHANGE, now));
+      dep2 = n ? n.m : null;
+      if (dep2 !== null && now >= dep2) { trip.leg2Locked = dep2; saveTrip(); }
+    }
+    o.dep2 = dep2;
+    o.exp2 = false;
+    for (var i = 0; i < list.length; i++) { if (list[i].m === dep2) o.exp2 = list[i].exp; }
+    o.arrive = dep2 === null ? null : dep2 + legs[1].ride;
+
+    if (now < l1.dep) o.phase = "wait1";
+    else if (now < o.firaArr) o.phase = "ride1";
+    else if (dep2 === null) o.phase = "stuck";
+    else if (now < dep2) o.phase = "wait2";
+    else if (now < o.arrive) o.phase = "ride2";
+    else o.phase = "done";
+
+    /* If the traveller has said they are aboard, believe them over the clock \u2014
+       they may have boarded a bus that is still sitting at the bay. */
+    if (trip.boarded2 && dep2 !== null && o.phase !== "wait1" && o.phase !== "ride1") {
+      o.phase = now < o.arrive ? "ride2" : "done";
+    }
+    return o;
+  }
+
+  function jrow(lbl, time, note, alt) {
+    return '<div class="jrow"><div class="jlbl">' + lbl + '</div>' +
+           '<div class="jtime' + (alt ? " alt" : "") + '">' + time + '</div>' +
+           '<div class="jnote">' + note + '</div></div>';
+  }
+
+  /* ---------- trip in progress ---------- */
+  function renderProgress(now) {
+    var to = trip.to, from = trip.from, o = progress(now), legs = trip.legs;
+    var dest = label(to), head = "", live = "";
+
+    if (o.phase === "wait1") {
+      head = jrow("Get on the bus at", clockOf(o.dep1),
+                  (o.dep1 - now <= 0 ? "right now" : "in " + dur(o.dep1 - now)) + " \u00B7 at " + label(from));
+      if (o.arrive !== null) head += jrow("Get to " + dest + " at", clockOf(o.arrive), "in " + dur(o.arrive - now), true);
+      live = "Waiting for the bus at " + label(from) + ".";
+    } else if (o.phase === "ride1") {
+      if (legs.length === 1) {
+        head = jrow("On the bus to " + dest, clockOf(o.arrive), "arriving in " + dur(o.arrive - now));
+        live = "You are on the bus. Stay on until " + dest + ".";
+      } else {
+        head = jrow("On the bus \u2014 get off at Fira", clockOf(o.firaArr), "in " + dur(o.firaArr - now));
+        head += jrow("Get to " + dest + " at", clockOf(o.arrive), "in " + dur(o.arrive - now), true);
+        live = "Next stop for you is Fira. Have your second fare ready.";
+      }
+    } else if (o.phase === "wait2") {
+      head = jrow("Next " + label(legs[1].route) + " bus at", clockOf(o.dep2),
+                  (o.dep2 - now <= 0 ? "right now" : "in " + dur(o.dep2 - now)) + " \u00B7 from Fira" +
+                  (o.exp2 ? " \u00B7 EXP" : ""));
+      head += jrow("Get to " + dest + " at", clockOf(o.arrive), "in " + dur(o.arrive - now), true);
+      live = "You are at Fira. Walk to the " + label(legs[1].route) + " bay and buy a second ticket.";
+    } else if (o.phase === "ride2") {
+      head = jrow("On the bus to " + dest, clockOf(o.arrive), "arriving in " + dur(o.arrive - now));
+      live = "You are on the second bus. Stay on until " + dest + ".";
+    } else if (o.phase === "stuck") {
+      head = jrow("No more buses to " + dest + " today", "\u2014", "you are at Fira");
+      live = "Nothing else runs on this route tonight. Taxi rank: +30 22860 22555.";
+    } else {
+      head = jrow("You should be in " + dest, clockOf(o.arrive), "trip finished");
+      live = "Tap below when you want to plan the next one.";
+    }
+
+    var bad = (o.phase === "stuck");
+    var out = '<div class="leave' + (bad ? " bad" : "") + '">' + head +
+              '<div class="livenote">' + live + "</div></div>";
+
+    /* steps, with the one you are on highlighted */
+    var idx = { wait1: 0, ride1: 0, wait2: 1, stuck: 1, ride2: 2, done: 99 }[o.phase];
+    if (legs.length === 1 && o.phase === "done") idx = 99;
+    var steps = "", n = 0;
+
+    legs.forEach(function (leg, i) {
+      if (i > 0) {
+        n++;
+        var st = 1 < idx ? "done" : (1 === idx ? "active" : "");
+        steps += '<li class="' + st + '"><span class="dot pay">' + (st === "done" ? "\u2713" : n) + '</span><span>' +
+          '<span class="step-main">Get off at Fira and buy a second ticket</span>' +
+          '<span class="step-sub">Reach Fira about <b>' + clockOf(o.firaArr) + '</b>. Walk to the ' +
+          label(legs[1].route) + " bay." +
+          (o.dep2 !== null ? " Bus leaves <b>" + clockOf(o.dep2) + "</b>." : "") + "</span>" +
+          (st === "active" && o.dep2 !== null
+            ? '<span class="live">Next bus in ' + dur(Math.max(0, o.dep2 - now)) + "</span>" : "") +
+          "</span></li>";
+      }
+      n++;
+      var si = i === 0 ? 0 : 2;
+      var stt = si < idx ? "done" : (si === idx ? "active" : "");
+      var depShown = i === 0 ? o.dep1 : o.dep2;
+      steps += '<li class="' + stt + '"><span class="dot">' + (stt === "done" ? "\u2713" : n) + '</span><span>' +
+        '<span class="step-main">' + (i === 0 ? "Take the " : "Then take the ") +
+        "<b>" + label(leg.route) + "</b> bus" +
+        (depShown !== null ? " at " + clockOf(depShown) : "") + "</span>" +
+        '<span class="step-sub">' +
+        (i === 0 ? "Wait at: " + stopOf(leg.from) + " " : "") +
+        ((i === 0 ? leg.exp : o.exp2) ? "Marked <b>EXP</b> \u2014 skips the inland villages. " : "") +
+        "Ride " + dur(leg.ride) + ", pay <b>" + eur(leg.fare) + "</b> on board." +
+        (i === legs.length - 1 && o.arrive !== null
+          ? " Puts you in " + dest + " about <b>" + clockOf(o.arrive) + "</b>." : "") + "</span>" +
+        (stt === "active" && depShown !== null
+          ? '<span class="live">' +
+            (o.phase === "ride1" || o.phase === "ride2"
+              ? "On board \u2014 " + dur(Math.max(0, (o.phase === "ride1" && legs.length > 1 ? o.firaArr : o.arrive) - now)) + " to go"
+              : "Leaves in " + dur(Math.max(0, depShown - now))) + "</span>" : "") +
+        "</span></li>";
+    });
+
+    var ticketNote = legs.length > 1 ? "two tickets (one per bus)" : "one ticket";
+    out += '<ul class="steps">' + steps + "</ul>" +
+      '<div class="cost"><span class="amt">' + eur(trip.fare) + "</span>" +
+      '<span class="side"><b>per person, one way</b><br>' + ticketNote +
+      " \u00B7 about $" + (trip.fare * RATE).toFixed(2) + "</span></div>";
+
+    /* The app cannot see whether you actually boarded, so let the traveller
+       say so in either direction. Matters most when the phone has been asleep
+       and the connection time has already slipped past. */
+    if (o.phase === "ride2") {
+      out += '<div class="foot-act"><button type="button" class="linkbtn" id="missed">I did not get on that bus</button></div>';
+    } else if (o.phase === "wait2" && o.dep2 !== null) {
+      out += '<div class="foot-act"><button type="button" class="linkbtn" id="boarded">I\'m on this bus already</button></div>';
+    }
+    out += '<div class="foot-act"><button type="button" class="reset" id="reset">Plan a different trip</button></div>';
+
+    elAnswer.innerHTML = out;
+
+    /* later departures for whichever bus you are waiting on */
+    var waitRoute = null, waitFromFira = false, cutoff = now;
+    if (o.phase === "wait1") { waitRoute = legs[0].route; waitFromFira = (from === "fira"); cutoff = o.dep1; }
+    else if (o.phase === "wait2" || o.phase === "stuck") { waitRoute = legs[1].route; waitFromFira = true; cutoff = o.dep2 === null ? now : o.dep2; }
+
+    if (waitRoute) {
+      var rr = R[waitRoute];
+      var upcoming = times(waitFromFira ? rr.out : rr.back).filter(function (t) { return t.m > cutoff; }).slice(0, 8);
+      elLater.innerHTML = upcoming.length
+        ? '<div class="lbl">Buses after that one</div><div class="chips">' +
+          upcoming.map(function (t) { return "<span>" + t.label + (t.exp ? " EXP" : "") + "</span>"; }).join("") + "</div>"
+        : "";
+    } else { elLater.innerHTML = ""; }
+
+    renderLastBus(from, to, now);
+  }
+
+  /* ---------- last bus home ---------- */
+  function renderLastBus(from, to, now) {
+    var homeId = to === "fira" ? from : to;
+    var homeR = R[homeId];
+    if (!homeR || homeR.noTimetable) { elLast.innerHTML = ""; return; }
+    var homeList = times(homeR.back);
+    var last = homeList[homeList.length - 1];
+    var left = last.m - now, cls, cd, why;
+    if (now < 300) {
+      cls = "gone"; cd = "not running yet";
+      why = "It's the middle of the night. Nothing runs from " + homeR.name +
+            " until " + homeList[0].label + ". Taxi: +30 22860 22555.";
+    } else if (left < 0) {
+      cls = "gone"; cd = "already gone";
+      why = "The last bus back to Fira left at " + last.label +
+            ". Call the Fira taxi rank on +30 22860 22555 \u2014 there are only about 30 taxis on the island.";
+    } else if (left <= 60) {
+      cls = "soon"; cd = "in " + dur(left);
+      why = "Head for the stop now. In August a full bus will drive straight past you, and there is no second chance.";
+    } else {
+      cls = "ok"; cd = "in " + dur(left);
+      why = "Plenty of time. Be at the stop 15 minutes early in peak season.";
+    }
+    elLast.innerHTML = '<div class="lastbus ' + cls + '">' +
+      '<div class="lbl">Last bus back to Fira from ' + homeR.name + "</div>" +
+      '<div class="row"><span class="t">' + last.label + '</span><span class="cd">' + cd + "</span></div>" +
+      '<div class="why">' + why + "</div></div>";
+  }
+
+  /* ---------- main ---------- */
   function render() {
-    var from = elFrom.value, to = elTo.value, now = nowSantorini();
+    var now = nowSantorini();
     elNow.textContent = clockOf(now);
 
+    if (trip) { renderProgress(now); return; }
+
+    var from = elFrom.value, to = elTo.value;
+
     if (from === to) {
-      elAnswer.innerHTML = '<div class="leave bad"><div class="lbl">Hmm</div>' +
-        '<div class="big"><span class="cd">You\'re already there.</span></div>' +
-        '<div class="arrive">Pick a different destination.</div></div>';
+      elAnswer.innerHTML = '<div class="leave bad">' +
+        jrow("Hmm", "\u2014", "You are already there. Pick a different destination.") + "</div>";
       elLast.innerHTML = ""; elLater.innerHTML = "";
       return;
     }
@@ -450,130 +723,109 @@
 
     if (p && p.port) {
       elAnswer.innerHTML =
-        '<div class="leave"><div class="lbl">Ferry port \u2014 no fixed timetable</div>' +
-        '<div class="big"><span class="cd">Buses meet the boats</span></div>' +
-        '<div class="arrive">KTEL schedules the port run against the ferry list, so it changes daily.</div></div>' +
+        '<div class="leave">' + jrow("Ferry port", "\u2014", "no fixed timetable \u2014 buses meet the boats") +
+        '<div class="livenote">KTEL schedules the port run against the ferry list, so it changes daily.</div></div>' +
         '<ul class="steps"><li><span class="dot">?</span><span><span class="step-main">Ask at Fira bus station</span>' +
         '<span class="step-sub">Tell them your sailing time and they will tell you which bus to take. ' +
         'Go <b>90 minutes early</b> \u2014 the cliff road jams when a ferry unloads.</span></span></li></ul>' +
-        '<div class="cost"><span class="amt">' + eur(p.fare) + '</span>' +
-        '<span class="side"><b>per person, cash</b><br>' + (p.viaFira ? "two tickets \u2014 you change at Fira" : "one ticket") + '</span></div>';
+        '<div class="cost"><span class="amt">' + eur(p.fare) + "</span>" +
+        '<span class="side"><b>per person, cash</b><br>' +
+        (p.viaFira ? "two tickets \u2014 you change at Fira" : "one ticket") + "</span></div>";
       elLast.innerHTML = ""; elLater.innerHTML = "";
       return;
     }
 
     if (!p) { elAnswer.innerHTML = ""; elLast.innerHTML = ""; elLater.innerHTML = ""; return; }
 
-    /* headline */
-    var wait = p.dep.m - now;
-    var head;
+    var wait = p.dep.m - now, head;
     if (p.tomorrow) {
-      head = '<div class="leave bad"><div class="lbl">No more buses today</div>' +
-             '<div class="big"><span class="t">' + p.dep.label + '</span><span class="cd">tomorrow morning</span></div>' +
-             '<div class="arrive">Tonight you need a taxi \u2014 Fira rank <b>+30 22860 22555</b>.</div></div>';
+      head = '<div class="leave bad">' +
+        jrow("No more buses today", p.dep.label, "first one tomorrow morning") +
+        '<div class="livenote">Tonight you need a taxi \u2014 Fira rank <b>+30 22860 22555</b>.</div></div>';
     } else {
-      /* Two explicit rows \u2014 get on at X, get to Y at Z \u2014 because a single
-         "arrive" line reads as if it were another departure time. */
       var buses = p.legs.length === 1 ? "1 bus" : p.legs.length + " buses";
       head = '<div class="leave">' +
-             '<div class="jrow">' +
-               '<div class="jlbl">Get on the bus at</div>' +
-               '<div class="jtime">' + p.dep.label + '</div>' +
-               '<div class="jnote">' + (wait <= 0 ? "right now" : "in " + dur(wait)) +
-               ' \u00B7 at ' + label(from) + '</div>' +
-             '</div>' +
-             '<div class="jrow">' +
-               '<div class="jlbl">Get to ' + label(to) + ' at</div>' +
-               '<div class="jtime alt">' + clockOf(p.arrive) + '</div>' +
-               '<div class="jnote">' + dur(p.arrive - p.dep.m) + ' total \u00B7 ' + buses + '</div>' +
-             '</div>' +
-             '</div>';
+        jrow("Get on the bus at", p.dep.label,
+             (wait <= 0 ? "right now" : "in " + dur(wait)) + " \u00B7 at " + label(from)) +
+        jrow("Get to " + label(to) + " at", clockOf(p.arrive),
+             dur(p.arrive - p.dep.m) + " total \u00B7 " + buses, true) + "</div>";
     }
 
-    /* steps */
     var steps = "", n = 0;
     p.legs.forEach(function (leg, i) {
       if (i > 0) {
         n++;
         steps += '<li><span class="dot pay">' + n + '</span><span>' +
           '<span class="step-main">Get off at Fira and buy a second ticket</span>' +
-          '<span class="step-sub">You reach Fira about <b>' + clockOf(p.atFira) + '</b>. Walk to the ' +
-          label(p.legs[1].route) + ' bay' +
-          (p.wait !== null ? ' and wait <b>' + dur(p.wait) + '</b>' : '') +
-          '. Ask an attendant if you can\'t spot it.</span></span></li>';
+          '<span class="step-sub">You reach Fira about <b>' + clockOf(p.atFira) + "</b>. Walk to the " +
+          label(p.legs[1].route) + " bay" +
+          (p.wait !== null ? " and wait <b>" + dur(p.wait) + "</b>" : "") +
+          ". Ask an attendant if you can't spot it.</span></span></li>";
       }
       n++;
       steps += '<li><span class="dot">' + n + '</span><span>' +
         '<span class="step-main">' + (i === 0 ? "Take the " : "Then take the ") +
-        '<b>' + label(leg.route) + '</b> bus at ' + leg.dep.label + '</span>' +
+        "<b>" + label(leg.route) + "</b> bus at " + leg.dep.label + "</span>" +
         '<span class="step-sub">' +
         (i === 0 ? "Wait at: " + stopOf(leg.from) + " " : "") +
         (leg.dep.exp ? "This one is marked <b>EXP</b> \u2014 it skips the inland villages. " : "") +
         "Ride " + dur(leg.ride) + ", pay <b>" + eur(leg.fare) + "</b> on board." +
         (i === p.legs.length - 1
-          ? " Puts you in " + label(to) + " about <b>" + clockOf(p.arrive) + "</b>."
-          : "") +
-        '</span></span></li>';
+          ? " Puts you in " + label(to) + " about <b>" + clockOf(p.arrive) + "</b>." : "") +
+        "</span></span></li>";
     });
 
     var ticketNote = p.legs.length > 1 ? "two tickets (one per bus)" : "one ticket";
-    var costBlock = '<div class="cost"><span class="amt">' + eur(p.fare) + '</span>' +
+    var costBlock = '<div class="cost"><span class="amt">' + eur(p.fare) + "</span>" +
       '<span class="side"><b>per person, one way</b><br>' + ticketNote +
-      ' \u00B7 about $' + (p.fare * RATE).toFixed(2) + '</span></div>';
+      " \u00B7 about $" + (p.fare * RATE).toFixed(2) + "</span></div>";
 
-    elAnswer.innerHTML = head + '<ul class="steps">' + steps + '</ul>' + costBlock;
+    var goBtn = p.tomorrow ? "" :
+      '<div class="foot-act"><button type="button" class="go" id="go">I\'m taking this trip</button>' +
+      '<span class="go-hint">Keeps this plan fixed and tracks each step</span></div>';
 
-    /* Last bus home: the question is always "can I get back from where I'm
-       heading?", so this tracks the destination \u2014 except when the destination
-       is Fira, where the relevant service is the one leaving where you are. */
-    var homeId = to === "fira" ? from : to;
-    var homeR = R[homeId];
-    if (homeR && !homeR.noTimetable) {
-      var homeList = times(homeR.back);
-      var last = homeList[homeList.length - 1];
-      var left = last.m - now, cls, cd, why;
-      if (now < 300) {
-        cls = "gone"; cd = "not running yet";
-        why = "It's the middle of the night. Nothing runs from " + homeR.name +
-              " until " + homeList[0].label + ". Taxi: +30 22860 22555.";
-      } else if (left < 0) {
-        cls = "gone"; cd = "already gone";
-        why = "The last bus back to Fira left at " + last.label +
-              ". Call the Fira taxi rank on +30 22860 22555 \u2014 there are only about 30 taxis on the island.";
-      } else if (left <= 60) {
-        cls = "soon"; cd = "in " + dur(left);
-        why = "Head for the stop now. In August a full bus will drive straight past you, and there is no second chance.";
-      } else {
-        cls = "ok"; cd = "in " + dur(left);
-        why = "Plenty of time. Be at the stop 15 minutes early in peak season.";
-      }
-      elLast.innerHTML = '<div class="lastbus ' + cls + '">' +
-        '<div class="lbl">Last bus back to Fira from ' + homeR.name + '</div>' +
-        '<div class="row"><span class="t">' + last.label + '</span><span class="cd">' + cd + '</span></div>' +
-        '<div class="why">' + why + '</div></div>';
-    } else {
-      elLast.innerHTML = "";
-    }
+    elAnswer.innerHTML = head + '<ul class="steps">' + steps + "</ul>" + costBlock + goBtn;
 
-    /* later departures on the first leg */
+    renderLastBus(from, to, now);
+
     var firstRoute = R[p.legs[0].route];
     var firstList = times(from === "fira" ? firstRoute.out : firstRoute.back);
     var upcoming = firstList.filter(function (t) { return t.m > p.dep.m; }).slice(0, 8);
-    if (upcoming.length && !p.tomorrow) {
-      elLater.innerHTML = '<div class="lbl">Later buses from ' + label(from) + '</div><div class="chips">' +
-        upcoming.map(function (t) { return "<span>" + t.label + (t.exp ? " EXP" : "") + "</span>"; }).join("") +
-        "</div>";
-    } else {
-      elLater.innerHTML = "";
-    }
+    elLater.innerHTML = (upcoming.length && !p.tomorrow)
+      ? '<div class="lbl">Later buses from ' + label(from) + '</div><div class="chips">' +
+        upcoming.map(function (t) { return "<span>" + t.label + (t.exp ? " EXP" : "") + "</span>"; }).join("") + "</div>"
+      : "";
   }
 
-  document.getElementById("swap").addEventListener("click", function () {
-    var a = elFrom.value; elFrom.value = elTo.value; elTo.value = a; render();
+  /* ---------- events ---------- */
+  elAnswer.addEventListener("click", function (e) {
+    var t = e.target;
+    if (t.id === "go") {
+      startTrip(elFrom.value, elTo.value, plan(elFrom.value, elTo.value, nowSantorini()));
+    } else if (t.id === "reset") {
+      endTrip();
+    } else if (t.id === "missed") {
+      trip.leg2Locked = null; trip.boarded2 = false; saveTrip(); render();
+    } else if (t.id === "boarded") {
+      var o = progress(nowSantorini());
+      if (o.dep2 !== null) { trip.leg2Locked = o.dep2; trip.boarded2 = true; saveTrip(); render(); }
+    }
   });
-  elFrom.addEventListener("change", render);
-  elTo.addEventListener("change", render);
-  setInterval(render, 30000);
+
+  document.getElementById("swap").addEventListener("click", function () {
+    var a = elFrom.value; elFrom.value = elTo.value; elTo.value = a;
+    if (trip) { trip = null; saveTrip(); }
+    render();
+  });
+  [elFrom, elTo].forEach(function (sel) {
+    sel.addEventListener("change", function () {
+      if (trip) { trip = null; saveTrip(); }
+      render();
+    });
+  });
+
+  setInterval(render, 15000);
+  loadTrip();
   render();
 })();
 </script>
