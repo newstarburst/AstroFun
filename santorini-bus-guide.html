@@ -238,6 +238,30 @@
     background: var(--ground); border: 1px solid var(--rule); color: var(--ink-2);
   }
   .upcoming span.exp { border-color: var(--olive); color: var(--olive); }
+  /* Last bus home — the thing you check when you are stranded somewhere at dusk. */
+  .lastbus {
+    margin-top: .9rem; padding: .75rem .9rem; border-radius: 5px;
+    border: 1px solid var(--rule-strong); background: var(--ground);
+    display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap;
+  }
+  .lastbus .k {
+    font-family: var(--display); font-size: .63rem; font-weight: 700;
+    letter-spacing: .11em; text-transform: uppercase; color: var(--ink-2);
+    flex-basis: 100%;
+  }
+  .lastbus .t {
+    font-family: var(--data); font-variant-numeric: tabular-nums;
+    font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em; line-height: 1;
+  }
+  .lastbus .in { font-family: var(--display); font-weight: 600; font-size: .87rem; }
+  .lastbus .why { font-size: .82rem; color: var(--ink-2); flex-basis: 100%; }
+  .lastbus.ok      { border-color: var(--olive); background: var(--olive-soft); }
+  .lastbus.ok .t, .lastbus.ok .in { color: var(--olive); }
+  .lastbus.soon    { border-color: var(--oxide); background: var(--oxide-soft); }
+  .lastbus.soon .t, .lastbus.soon .in { color: var(--oxide); }
+  .lastbus.gone    { border-color: var(--oxide); background: var(--oxide-soft); }
+  .lastbus.gone .t, .lastbus.gone .in { color: var(--oxide); }
+
   .board-foot {
     padding: .7rem 1rem; border-top: 1px solid var(--rule);
     font-size: .8rem; color: var(--ink-2); background: var(--panel-2);
@@ -502,6 +526,7 @@
     <div class="board-out">
       <div class="next-hero" id="next-hero"></div>
       <div class="upcoming" id="upcoming"></div>
+      <div class="lastbus" id="lastbus"></div>
     </div>
     <div class="board-foot"><p id="board-foot"></p></div>
   </div>
@@ -1246,52 +1271,66 @@
     <h2>Put this on your phone</h2>
   </div>
 
+  <div class="note good">
+    <strong>Put the downloaded file on your home screen — not the web link</strong>
+    <p>
+      If you only do one thing, do this one. The downloaded copy works with <b>zero signal and zero
+      data</b>. The web link needs a connection every single time you open it, which is exactly the
+      thing you cannot count on here.
+    </p>
+  </div>
+
+  <h3 class="sub">The one to install: the offline copy</h3>
+  <ol class="steps">
+    <li>Download the file <span class="said">santorini-bus-guide.html</span>. It lands in your <b>Downloads</b> folder.</li>
+    <li>Open the <b>My Files</b> app on your S25+ — Samsung's file manager, in the app drawer.</li>
+    <li>Tap <b>Downloads</b>, then tap <span class="said">santorini-bus-guide.html</span>.</li>
+    <li>If it asks which app to use, choose <b>Chrome</b>.</li>
+    <li>Tap the <span class="said">⋮</span> three dots at the top right → <b>Add to Home screen</b> → name it <span class="said">Bus</span> → <b>Add</b>.</li>
+    <li>Done. That icon now opens the full guide in airplane mode, in a dead spot, or with roaming switched off.</li>
+  </ol>
+
+  <div class="note">
+    <strong>Test it right now, before you need it</strong>
+    <p>
+      Turn on <b>airplane mode</b> and tap the icon. If the timetables, the clock and the calculator
+      all still work, you are set. If you get Chrome's dinosaur, you installed the web link by
+      mistake — go back and repeat the steps starting from <b>My Files</b>.
+    </p>
+  </div>
+
+  <h3 class="sub">Why it cannot auto-update, and why that is fine</h3>
   <p>
-    Two ways, and you should do <strong>both</strong>. The first gives you an icon on your home
-    screen. The second gives you a copy that works with <strong>zero signal and zero data</strong>,
-    which matters on a Greek island.
+    A saved file on your phone is not allowed to reach out and pull fresh data — that is a browser
+    security rule, not something that can be switched on. So there is no background sync here, and
+    any app that claims otherwise for Santorini buses is reading the same seasonal sheet you already
+    have.
+  </p>
+  <p>
+    That sheet is the point. KTEL publishes a timetable revision that stands for the whole season —
+    the one in this guide is dated <strong>14 July 2026</strong> and covers your entire August trip.
+    There is no live bus tracking on this island to miss out on.
   </p>
 
-  <h3 class="sub">A · Add an icon to your Samsung home screen</h3>
-  <p class="soft" style="margin-bottom:.4rem;">Takes about 20 seconds. Needs internet each time you open it.</p>
-  <ol class="steps">
-    <li>Open this page in <b>Chrome</b> on your Galaxy S25+ (not the Samsung Internet browser — Chrome handles this better).</li>
-    <li>Tap the <span class="said">⋮</span> three-dot button in the top-right corner.</li>
-    <li>Tap <b>Add to Home screen</b>. If you see <b>Install</b> instead, that works too — tap that.</li>
-    <li>Name it something short like <span class="said">Bus</span>, then tap <b>Add</b>.</li>
-    <li>Tap <b>Add automatically</b> when it asks where to put it.</li>
-    <li>Done. There is now a bus icon on your home screen that opens straight to this page.</li>
-  </ol>
-
-  <h3 class="sub">B · Save a copy that works with no signal</h3>
-  <p class="soft" style="margin-bottom:.4rem;">Do this before you leave the U.S. This is your safety net.</p>
-  <ol class="steps">
-    <li>Download the file I sent you — it is called <span class="said">santorini-bus-guide.html</span>. It lands in your <b>Downloads</b> folder.</li>
-    <li>Open the <b>My Files</b> app on your S25+ (Samsung's file manager, in the app drawer).</li>
-    <li>Tap <b>Downloads</b>, then tap <span class="said">santorini-bus-guide.html</span>.</li>
-    <li>If it asks which app to use, choose <b>Chrome</b>. It opens exactly like this page.</li>
-    <li>While it is open in Chrome, tap <span class="said">⋮</span> → <b>Add to Home screen</b> to give the offline copy its own icon too.</li>
-  </ol>
-
-  <div class="note good">
-    <strong>Why the offline copy matters</strong>
+  <div class="note">
+    <strong>If you want to refresh it anyway</strong>
     <p>
-      Everything on this page — the timetables, the next-bus clock, the cost calculator — is inside
-      that one file. Nothing is fetched from the internet. It will work in airplane mode, at the
-      bottom of the Athinios cliff road, and anywhere your U.S. carrier's roaming quietly gives up.
+      Next time you are on decent hotel wifi, open the web link, re-download the file, and let it
+      overwrite the old one. Your home-screen icon keeps working and picks up the new copy. Doing
+      this once a week is more than enough; once a trip is realistic.
     </p>
   </div>
 
   <div class="note warn">
-    <strong>One honest limitation</strong>
+    <strong>Two honest limitations</strong>
     <p>
-      This is a saved web page with a home-screen icon, not something from the Play Store. It cannot
-      send you notifications and it will not appear in your app list under "Apps" — it lives on the
-      home screen only. For a printed timetable in your pocket, KTEL's own PDF is the thing to keep.
+      This is a saved web page with a home-screen icon, not a Play Store app. It cannot send
+      notifications and will not show up in your app drawer under "Apps" — it lives on the home
+      screen only.
     </p>
     <p>
-      And schedules do change mid-season. <b>Photograph the printed board inside Fira station on
-      day one</b> and trust that over anything on a screen.
+      And schedules still shift mid-season with ferry traffic. <b>Photograph the printed board
+      inside Fira station on day one</b> and trust that over anything on a screen, including this.
     </p>
   </div>
 </section>
@@ -1469,6 +1508,7 @@
     back: document.getElementById("dir-back"),
     hero: document.getElementById("next-hero"),
     upcoming: document.getElementById("upcoming"),
+    lastbus: document.getElementById("lastbus"),
     foot: document.getElementById("board-foot"),
     clock: document.getElementById("clock")
   };
@@ -1525,6 +1565,47 @@
       s.textContent = t.label + (t.exp ? " EXP" : "");
       elBoard.upcoming.appendChild(s);
     });
+
+    /* Last bus back to Fira — always shown, whichever direction is selected,
+       because this is the number that decides whether you are paying for a taxi. */
+    var homeward = r.back.map(parse).filter(function (t) { return !t.sch; });
+    var last = homeward[homeward.length - 1];
+    if (last) {
+      var left = last.mins - now.mins;
+      var first = homeward[0];
+      var cls, headline, why;
+      if (left < 0) {
+        cls = "gone";
+        headline = "gone";
+        why = "The last bus from " + r.far + " to Fira left at " + last.label +
+              ". You are walking or paying for a taxi tonight. Santorini runs about 30 taxis for the whole island — call the Fira rank on +30 22860 22555 rather than waiting hopefully at the stop.";
+      } else if (now.mins < 300) {
+        /* Small hours: nothing has run yet today, so a countdown to tonight's
+           last bus is a misleading thing to put in front of someone. */
+        cls = "gone";
+        headline = "service has not started";
+        why = "It is the middle of the night. Nothing runs on this route until " +
+              (first ? first.label : "morning") + ", and today's last bus back from " + r.far +
+              " will be " + last.label + ". Until then it is a taxi — Fira rank, +30 22860 22555.";
+      } else if (left <= 60) {
+        cls = "soon";
+        headline = "in " + dur(left);
+        why = "Last bus from " + r.far + " to Fira. Head for the stop now — in August a full bus will drive past you, and there is no second chance on this one.";
+      } else {
+        cls = "ok";
+        headline = "in " + dur(left);
+        why = "Last bus from " + r.far + " to Fira. Plenty of time, but be at the stop 15 minutes early if you are travelling in peak season.";
+      }
+      elBoard.lastbus.className = "lastbus " + cls;
+      elBoard.lastbus.innerHTML =
+        '<span class="k">Last bus home from ' + r.far + "</span>" +
+        '<span class="t">' + last.label + "</span>" +
+        '<span class="in">' + headline + "</span>" +
+        '<span class="why">' + why + "</span>";
+    } else {
+      elBoard.lastbus.className = "lastbus";
+      elBoard.lastbus.innerHTML = "";
+    }
 
     var notes = [];
     notes.push(list.length + " departures a day on this direction.");

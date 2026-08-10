@@ -11,6 +11,7 @@ browser. That is the whole thing — there is nothing to install, no build step,
 | Section | What it does |
 | --- | --- |
 | Next bus, right now | Reads the official timetable against the current clock **in Santorini** and tells you the next departure and the eight after it |
+| Last bus home | Always-visible countdown to the final departure back to Fira from wherever you are, colour-coded green / amber / red, with the Fira taxi rank number once it has gone |
 | The mental model | The hub-and-spoke diagram: every route ends at Fira, so every trip is one ticket or two |
 | Official fares | Every fare from the KTEL sheet — nearly everything is €2.20, with three €2.70 exceptions |
 | Full timetables | All ~230 published departures, both directions, with EXP and ΣΧ markings decoded |
@@ -52,6 +53,14 @@ next-bus logic are plain JavaScript inside the file. It works in airplane mode.
 
 The clock uses `Intl.DateTimeFormat` with `timeZone: "Europe/Athens"`, so departure countdowns are
 correct whether the device is set to Santorini time or to a U.S. time zone.
+
+**Install the downloaded file, not a bookmark.** On Android: save the file, open it from *My Files
+→ Downloads* in Chrome, then ⋮ → *Add to Home screen*. Verify by switching on airplane mode and
+tapping the icon.
+
+It deliberately does **not** self-update. A `file://` page cannot fetch remote content, and the
+underlying KTEL sheet is a seasonal revision rather than a live feed, so there is nothing to sync.
+To refresh, re-download the file over the old one; the home-screen icon picks up the new copy.
 
 ## Verify before you rely on it
 
