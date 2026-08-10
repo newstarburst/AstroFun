@@ -1,1361 +1,244 @@
-<title>Santorini Bus — Pocket Guide, August 2026</title>
+<title>Santorini Bus</title>
 <style>
-  /* ===================== TOKENS =====================
-     Light is the base palette. Volcanic ink, whitewash ground,
-     caldera blue, oxide red off the Red Beach cliffs. */
   :root {
     --ground:      #FAF8F5;
+    --card:        #FFFFFF;
     --panel:       #F1EDE6;
-    --panel-2:     #E6E0D5;
     --ink:         #1E1916;
     --ink-2:       #5D554D;
     --ink-3:       #8A8076;
-    --rule:        #DAD3C7;
-    --rule-strong: #BCB3A5;
+    --rule:        #DDD6CA;
     --accent:      #0F5470;
     --accent-ink:  #0A3B50;
     --accent-soft: #DBE9F1;
     --oxide:       #9C3E25;
-    --oxide-soft:  #F6E3DB;
-    --olive:       #436540;
-    --olive-soft:  #E2EBDC;
-    --shadow:      0 1px 2px rgba(30,25,22,.07), 0 8px 22px rgba(30,25,22,.06);
+    --oxide-soft:  #F8E6DE;
+    --olive:       #3F6340;
+    --olive-soft:  #E3EDDD;
+    --shadow:      0 1px 3px rgba(30,25,22,.07), 0 10px 28px rgba(30,25,22,.07);
 
-    --display: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --body: Charter, "Bitstream Charter", "Iowan Old Style", "Source Serif Pro", Georgia, serif;
-    --data: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-
-    --measure: 36rem;
-    --wide: 72rem;
+    --ui: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --data: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --ground:      #131110;
-      --panel:       #1D1917;
-      --panel-2:     #292320;
-      --ink:         #F0EBE3;
-      --ink-2:       #AFA496;
-      --ink-3:       #80766A;
-      --rule:        #332C28;
-      --rule-strong: #4C423B;
-      --accent:      #74BEDC;
-      --accent-ink:  #ABD8EB;
+      --ground:      #121010;
+      --card:        #1C1917;
+      --panel:       #262120;
+      --ink:         #F1ECE4;
+      --ink-2:       #B0A597;
+      --ink-3:       #837868;
+      --rule:        #362E29;
+      --accent:      #79C1DE;
+      --accent-ink:  #AEDAEC;
       --accent-soft: #16323F;
-      --oxide:       #E08965;
-      --oxide-soft:  #38211A;
-      --olive:       #99B786;
-      --olive-soft:  #222C1E;
-      --shadow:      0 1px 2px rgba(0,0,0,.45), 0 8px 22px rgba(0,0,0,.35);
+      --oxide:       #E58F6B;
+      --oxide-soft:  #3A231B;
+      --olive:       #9DBB8A;
+      --olive-soft:  #212C1E;
+      --shadow:      0 1px 3px rgba(0,0,0,.5), 0 10px 28px rgba(0,0,0,.4);
     }
   }
-
   :root[data-theme="dark"] {
-    --ground:      #131110;
-    --panel:       #1D1917;
-    --panel-2:     #292320;
-    --ink:         #F0EBE3;
-    --ink-2:       #AFA496;
-    --ink-3:       #80766A;
-    --rule:        #332C28;
-    --rule-strong: #4C423B;
-    --accent:      #74BEDC;
-    --accent-ink:  #ABD8EB;
+    --ground:      #121010;
+    --card:        #1C1917;
+    --panel:       #262120;
+    --ink:         #F1ECE4;
+    --ink-2:       #B0A597;
+    --ink-3:       #837868;
+    --rule:        #362E29;
+    --accent:      #79C1DE;
+    --accent-ink:  #AEDAEC;
     --accent-soft: #16323F;
-    --oxide:       #E08965;
-    --oxide-soft:  #38211A;
-    --olive:       #99B786;
-    --olive-soft:  #222C1E;
-    --shadow:      0 1px 2px rgba(0,0,0,.45), 0 8px 22px rgba(0,0,0,.35);
+    --oxide:       #E58F6B;
+    --oxide-soft:  #3A231B;
+    --olive:       #9DBB8A;
+    --olive-soft:  #212C1E;
+    --shadow:      0 1px 3px rgba(0,0,0,.5), 0 10px 28px rgba(0,0,0,.4);
   }
 
-  /* ===================== BASE ===================== */
   * { box-sizing: border-box; }
 
   body {
     margin: 0;
     background: var(--ground);
     color: var(--ink);
-    font-family: var(--body);
+    font-family: var(--ui);
     font-size: 17px;
-    line-height: 1.6;
+    line-height: 1.45;
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
   }
 
-  .wrap { max-width: var(--wide); margin: 0 auto; padding: 0 clamp(.9rem, 4vw, 3rem) 4rem; }
-  p, ul, ol { max-width: var(--measure); }
+  .app { max-width: 30rem; margin: 0 auto; padding: 1rem 1rem 3rem; }
 
-  a { color: var(--accent); text-underline-offset: 2px; }
-  a:focus-visible, button:focus-visible, select:focus-visible,
-  input:focus-visible, summary:focus-visible {
-    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px;
-  }
-
-  h1, h2, h3, h4 { font-family: var(--display); text-wrap: balance; margin: 0; }
-
-  .eyebrow {
-    font-family: var(--display); font-size: .67rem; font-weight: 700;
-    letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3);
+  /* ---------- top ---------- */
+  .top { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: 1.1rem; }
+  .top h1 { font-size: 1.05rem; font-weight: 800; letter-spacing: -.02em; margin: 0; }
+  .top h1 span { color: var(--accent); }
+  .now {
+    font-family: var(--data); font-size: .82rem; font-variant-numeric: tabular-nums;
+    color: var(--accent-ink); background: var(--accent-soft);
+    border: 1px solid var(--accent); padding: .25rem .5rem; border-radius: 4px;
   }
 
-  /* ===================== STICKY BAR ===================== */
-  .bar {
-    position: sticky; top: 0; z-index: 50;
-    background: var(--ground);
-    border-bottom: 1px solid var(--rule);
-    padding: .5rem clamp(.9rem, 4vw, 3rem);
-    display: flex; align-items: center; gap: .75rem;
-    flex-wrap: wrap;
+  /* ---------- pickers ---------- */
+  .pickers { display: grid; gap: .55rem; margin-bottom: 1rem; position: relative; }
+  .pick { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: .7rem .85rem; box-shadow: var(--shadow); }
+  .pick label {
+    display: block; font-size: .68rem; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: .15rem;
   }
-  .bar-brand {
-    font-family: var(--display); font-weight: 800; font-size: .82rem;
-    letter-spacing: -.01em; white-space: nowrap;
+  .pick select {
+    width: 100%; border: 0; background: transparent; color: var(--ink);
+    font-family: var(--ui); font-size: 1.28rem; font-weight: 700; letter-spacing: -.02em;
+    padding: .1rem 0; margin: 0; -webkit-appearance: none; appearance: none;
   }
-  .bar-brand span { color: var(--accent); }
-  .clock {
-    font-family: var(--data); font-size: .78rem; font-variant-numeric: tabular-nums;
-    color: var(--ink); background: var(--accent-soft); border: 1px solid var(--accent);
-    padding: .18rem .5rem; border-radius: 3px; white-space: nowrap;
-  }
-  .clock b { color: var(--accent-ink); }
-  .bar-nav {
-    display: flex; gap: .3rem; overflow-x: auto; flex: 1 1 100%;
-    -webkit-overflow-scrolling: touch; scrollbar-width: none;
-    padding-bottom: 2px;
-  }
-  .bar-nav::-webkit-scrollbar { display: none; }
-  .bar-nav a {
-    font-family: var(--display); font-size: .7rem; font-weight: 600;
-    letter-spacing: .05em; text-transform: uppercase; text-decoration: none;
-    color: var(--ink-2); background: var(--panel); border: 1px solid var(--rule);
-    padding: .3rem .55rem; border-radius: 999px; white-space: nowrap;
-  }
-  .bar-nav a:hover { color: var(--accent-ink); border-color: var(--accent); }
+  .pick select:focus { outline: none; }
+  .pick:focus-within { border-color: var(--accent); }
 
-  @media (min-width: 800px) {
-    .bar-nav { flex: 1 1 auto; justify-content: flex-end; }
-  }
-
-  /* ===================== MASTHEAD ===================== */
-  header.masthead {
-    border-bottom: 2px solid var(--ink);
-    padding: clamp(1.5rem, 5vw, 3rem) 0 1.3rem;
-    margin-bottom: 2.2rem;
-  }
-  .masthead h1 {
-    font-size: clamp(2rem, 8vw, 4rem); font-weight: 800;
-    letter-spacing: -.035em; line-height: .96; margin: .45rem 0 0;
-  }
-  .masthead h1 em { font-style: normal; color: var(--accent); }
-  .standfirst {
-    font-size: clamp(1rem, 2.4vw, 1.18rem); color: var(--ink-2);
-    margin: 1rem 0 0; max-width: 42rem;
-  }
-  .stamp-row { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1.2rem; }
-  .stamp {
-    font-family: var(--data); font-size: .69rem; letter-spacing: .03em;
-    padding: .3rem .55rem; border: 1px solid var(--rule-strong); border-radius: 3px;
-    color: var(--ink-2); background: var(--panel);
-  }
-  .stamp.live { border-color: var(--olive); color: var(--olive); background: var(--olive-soft); }
-
-  /* ===================== SECTIONS ===================== */
-  section { margin-bottom: 3.5rem; scroll-margin-top: 5.5rem; }
-  .sec-head {
-    display: flex; align-items: baseline; gap: .8rem;
-    border-bottom: 1px solid var(--rule); padding-bottom: .5rem; margin-bottom: 1.4rem;
-  }
-  .sec-head h2 { font-size: clamp(1.25rem, 4vw, 1.8rem); font-weight: 700; letter-spacing: -.022em; }
-  .sec-num { font-family: var(--data); font-size: .78rem; color: var(--accent); font-weight: 600; flex: none; }
-  h3.sub { font-size: 1.02rem; font-weight: 700; letter-spacing: -.01em; margin: 1.9rem 0 .55rem; }
-
-  /* ===================== CALLOUTS ===================== */
-  .note {
-    border-left: 3px solid var(--accent); background: var(--accent-soft); color: var(--ink);
-    padding: .85rem 1rem; border-radius: 0 4px 4px 0; margin: 1.3rem 0;
-    max-width: 44rem; font-size: .93rem;
-  }
-  .note.warn { border-left-color: var(--oxide); background: var(--oxide-soft); }
-  .note.good { border-left-color: var(--olive); background: var(--olive-soft); }
-  .note strong {
-    font-family: var(--display); font-size: .8rem; letter-spacing: .06em;
-    text-transform: uppercase; display: block; margin-bottom: .25rem;
-  }
-  .note p { margin: 0; max-width: none; }
-  .note p + p { margin-top: .5rem; }
-
-  /* ===================== NEXT BUS PANEL ===================== */
-  .board {
-    border: 1px solid var(--rule-strong); border-radius: 6px;
-    background: var(--panel); box-shadow: var(--shadow); overflow: hidden;
-  }
-  .board-controls {
-    display: grid; grid-template-columns: 1fr; gap: .8rem;
-    padding: 1rem; border-bottom: 1px solid var(--rule); background: var(--panel-2);
-  }
-  @media (min-width: 620px) { .board-controls { grid-template-columns: 2fr 1.4fr; } }
-
-  .field { display: flex; flex-direction: column; gap: .3rem; }
-  .field label {
-    font-family: var(--display); font-size: .65rem; font-weight: 700;
-    letter-spacing: .11em; text-transform: uppercase; color: var(--ink-2);
-  }
-  .field select, .field input {
-    font-family: var(--body); font-size: 1rem; padding: .6rem .6rem;
-    border: 1px solid var(--rule-strong); border-radius: 4px;
-    background: var(--ground); color: var(--ink); width: 100%;
-  }
-  .field input[type="number"] { font-family: var(--data); font-variant-numeric: tabular-nums; }
-
-  .dir-toggle { display: flex; gap: 0; border: 1px solid var(--rule-strong); border-radius: 4px; overflow: hidden; }
-  .dir-toggle button {
-    flex: 1; font-family: var(--display); font-size: .78rem; font-weight: 600;
-    padding: .6rem .4rem; border: 0; background: var(--ground); color: var(--ink-2); cursor: pointer;
-  }
-  .dir-toggle button[aria-pressed="true"] { background: var(--accent); color: var(--ground); }
-
-  .board-out { padding: 1rem; }
-  .next-hero {
-    display: flex; align-items: baseline; gap: .7rem; flex-wrap: wrap;
-    padding: .9rem 1rem; border-radius: 5px;
-    background: var(--accent-soft); border: 1px solid var(--accent); margin-bottom: .8rem;
-  }
-  .next-hero .t {
-    font-family: var(--data); font-variant-numeric: tabular-nums;
-    font-size: 2.1rem; font-weight: 700; letter-spacing: -.03em; line-height: 1; color: var(--accent-ink);
-  }
-  .next-hero .in { font-family: var(--display); font-weight: 700; font-size: .95rem; color: var(--accent-ink); }
-  .next-hero .meta { font-size: .85rem; color: var(--ink-2); flex-basis: 100%; }
-
-  .next-hero.closed { background: var(--oxide-soft); border-color: var(--oxide); }
-  .next-hero.closed .t, .next-hero.closed .in { color: var(--oxide); }
-
-  .upcoming { display: flex; flex-wrap: wrap; gap: .35rem; }
-  .upcoming span {
-    font-family: var(--data); font-variant-numeric: tabular-nums; font-size: .82rem;
-    padding: .25rem .5rem; border-radius: 3px;
-    background: var(--ground); border: 1px solid var(--rule); color: var(--ink-2);
-  }
-  .upcoming span.exp { border-color: var(--olive); color: var(--olive); }
-  /* Last bus home — the thing you check when you are stranded somewhere at dusk. */
-  .lastbus {
-    margin-top: .9rem; padding: .75rem .9rem; border-radius: 5px;
-    border: 1px solid var(--rule-strong); background: var(--ground);
-    display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap;
-  }
-  .lastbus .k {
-    font-family: var(--display); font-size: .63rem; font-weight: 700;
-    letter-spacing: .11em; text-transform: uppercase; color: var(--ink-2);
-    flex-basis: 100%;
-  }
-  .lastbus .t {
-    font-family: var(--data); font-variant-numeric: tabular-nums;
-    font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em; line-height: 1;
-  }
-  .lastbus .in { font-family: var(--display); font-weight: 600; font-size: .87rem; }
-  .lastbus .why { font-size: .82rem; color: var(--ink-2); flex-basis: 100%; }
-  .lastbus.ok      { border-color: var(--olive); background: var(--olive-soft); }
-  .lastbus.ok .t, .lastbus.ok .in { color: var(--olive); }
-  .lastbus.soon    { border-color: var(--oxide); background: var(--oxide-soft); }
-  .lastbus.soon .t, .lastbus.soon .in { color: var(--oxide); }
-  .lastbus.gone    { border-color: var(--oxide); background: var(--oxide-soft); }
-  .lastbus.gone .t, .lastbus.gone .in { color: var(--oxide); }
-
-  .board-foot {
-    padding: .7rem 1rem; border-top: 1px solid var(--rule);
-    font-size: .8rem; color: var(--ink-2); background: var(--panel-2);
-  }
-  .board-foot p { margin: 0; max-width: none; }
-
-  /* ===================== TABLES ===================== */
-  .table-scroll { overflow-x: auto; border: 1px solid var(--rule); border-radius: 5px; background: var(--panel); }
-  table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: .88rem; }
-  th, td { text-align: left; padding: .58rem .75rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
-  thead th {
-    font-family: var(--display); font-size: .65rem; font-weight: 700; letter-spacing: .1em;
-    text-transform: uppercase; color: var(--ink-2); background: var(--panel-2);
-    border-bottom: 1px solid var(--rule-strong); white-space: nowrap;
-  }
-  tbody tr:last-child td { border-bottom: none; }
-  td.num, th.num { font-family: var(--data); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  td.route { font-family: var(--display); font-weight: 600; font-size: .86rem; }
-  .fare { font-family: var(--data); font-variant-numeric: tabular-nums; font-weight: 600; color: var(--accent-ink); }
-  .soft { color: var(--ink-3); font-size: .82rem; }
-
-  /* ===================== TIMETABLE DETAILS ===================== */
-  details.tt {
-    border: 1px solid var(--rule); border-radius: 5px; background: var(--panel);
-    margin-bottom: .6rem; overflow: hidden;
-  }
-  details.tt > summary {
-    cursor: pointer; list-style: none; padding: .75rem .9rem;
-    display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap;
-  }
-  details.tt > summary::-webkit-details-marker { display: none; }
-  details.tt > summary::after {
-    content: "▸"; margin-left: auto; color: var(--ink-3); font-size: .9rem; flex: none;
-  }
-  details.tt[open] > summary::after { content: "▾"; }
-  details.tt[open] > summary { border-bottom: 1px solid var(--rule); background: var(--panel-2); }
-  .tt-name { font-family: var(--display); font-weight: 700; font-size: .95rem; }
-  .tt-meta { font-family: var(--data); font-size: .76rem; color: var(--ink-2); }
-  .tt-body { padding: .9rem; display: grid; gap: 1rem; }
-  @media (min-width: 620px) { .tt-body { grid-template-columns: 1fr 1fr; } }
-  .tt-col h4 {
-    font-family: var(--display); font-size: .64rem; font-weight: 700; letter-spacing: .11em;
-    text-transform: uppercase; color: var(--ink-2); margin-bottom: .45rem;
-  }
-  .tt-times { display: flex; flex-wrap: wrap; gap: .28rem; }
-  .tt-times span {
-    font-family: var(--data); font-variant-numeric: tabular-nums; font-size: .8rem;
-    padding: .2rem .42rem; border-radius: 3px; background: var(--ground);
-    border: 1px solid var(--rule); color: var(--ink);
-  }
-  .tt-times span.exp { border-color: var(--olive); color: var(--olive); }
-  .tt-times span.sch { border-color: var(--oxide); color: var(--oxide); text-decoration: line-through; opacity: .75; }
-
-  .legend { display: flex; flex-wrap: wrap; gap: .8rem; font-size: .8rem; color: var(--ink-2); margin: .8rem 0 1.2rem; max-width: none; }
-  .legend b { font-family: var(--data); font-weight: 600; }
-  .legend .k-exp { color: var(--olive); }
-  .legend .k-sch { color: var(--oxide); }
-
-  /* ===================== DIAGRAM ===================== */
-  figure.fig { margin: 0 0 1rem; }
-  .fig-scroll { overflow-x: auto; padding-bottom: .4rem; }
-  .fig svg { display: block; width: 100%; min-width: 600px; max-width: 920px; height: auto; margin: 0 auto; color: var(--ink-2); }
-  figcaption {
-    font-size: .86rem; color: var(--ink-2); max-width: 44rem; margin-top: .8rem;
-    padding-left: .85rem; border-left: 2px solid var(--rule);
-  }
-  .swipe-hint { font-size: .74rem; color: var(--ink-3); font-family: var(--display); letter-spacing: .05em; text-transform: uppercase; }
-  @media (min-width: 960px) { .swipe-hint { display: none; } }
-
-  /* ===================== CALCULATOR ===================== */
-  .calc { border: 1px solid var(--rule-strong); border-radius: 6px; background: var(--panel); box-shadow: var(--shadow); overflow: hidden; }
-  .calc-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: .85rem; padding: 1rem; border-bottom: 1px solid var(--rule);
-  }
-  .toggle-row { display: flex; align-items: center; gap: .5rem; align-self: end; padding-bottom: .55rem; }
-  .toggle-row input { width: 1.1rem; height: 1.1rem; accent-color: var(--accent); }
-  .toggle-row label { font-family: var(--body); font-size: .95rem; text-transform: none; letter-spacing: 0; color: var(--ink); font-weight: 400; }
-
-  .calc-out { padding: 1rem; display: grid; gap: 1rem; }
-  .legs { display: flex; flex-direction: column; gap: .45rem; }
-  .leg {
-    display: flex; align-items: baseline; gap: .6rem; padding: .5rem .7rem;
-    background: var(--ground); border: 1px solid var(--rule); border-radius: 4px; font-size: .88rem;
-  }
-  .leg-n {
-    font-family: var(--data); font-size: .68rem; font-weight: 700; color: var(--ground);
-    background: var(--accent); width: 1.3rem; height: 1.3rem;
-    display: grid; place-items: center; border-radius: 50%; flex: none;
-  }
-  .leg-body { flex: 1; }
-  .leg-name { font-family: var(--display); font-weight: 600; font-size: .86rem; }
-  .leg-meta { color: var(--ink-2); font-size: .8rem; }
-  .leg-fare { font-family: var(--data); font-variant-numeric: tabular-nums; font-weight: 600; flex: none; }
-  .leg.transfer { background: var(--oxide-soft); border-color: var(--oxide); }
-  .leg.transfer .leg-n { background: var(--oxide); }
-
-  .totals {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 5px; overflow: hidden;
-  }
-  .total-cell { background: var(--panel-2); padding: .8rem .9rem; }
-  .total-cell .k {
-    font-family: var(--display); font-size: .62rem; font-weight: 700; letter-spacing: .11em;
-    text-transform: uppercase; color: var(--ink-2); display: block; margin-bottom: .22rem;
-  }
-  .total-cell .v {
-    font-family: var(--data); font-variant-numeric: tabular-nums; font-size: 1.45rem;
-    font-weight: 600; letter-spacing: -.02em; line-height: 1.1;
-  }
-  .total-cell.hero { background: var(--accent-soft); }
-  .total-cell.hero .v { color: var(--accent-ink); }
-  .total-cell .sub { font-size: .76rem; color: var(--ink-2); font-family: var(--body); margin-top: .18rem; }
-  .calc-err { color: var(--oxide); font-size: .92rem; }
-
-  /* ===================== CARDS ===================== */
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: .9rem; }
-  .card {
-    border: 1px solid var(--rule); border-radius: 5px; background: var(--panel);
-    padding: 1rem 1.05rem 1.05rem; display: flex; flex-direction: column; gap: .55rem;
-  }
-  .card-top { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; }
-  .card h3 { font-size: 1rem; font-weight: 700; letter-spacing: -.012em; line-height: 1.25; }
-  .card .price {
-    font-family: var(--data); font-variant-numeric: tabular-nums; font-weight: 700;
-    font-size: 1.02rem; color: var(--accent-ink); flex: none;
-  }
-  .chips { display: flex; flex-wrap: wrap; gap: .3rem; }
-  .chip {
-    font-family: var(--data); font-size: .69rem; padding: .18rem .42rem; border-radius: 3px;
-    background: var(--panel-2); color: var(--ink-2); border: 1px solid var(--rule);
-  }
-  .chip.hi { background: var(--accent-soft); color: var(--accent-ink); border-color: var(--accent); }
-  .chip.lo { background: var(--oxide-soft); color: var(--oxide); border-color: var(--oxide); }
-
-  .card dl { margin: 0; display: grid; grid-template-columns: 5.2rem 1fr; gap: .28rem .65rem; font-size: .84rem; }
-  .card dt {
-    font-family: var(--display); font-size: .6rem; font-weight: 700; letter-spacing: .09em;
-    text-transform: uppercase; color: var(--ink-3); padding-top: .2rem;
-  }
-  .card dd { margin: 0; color: var(--ink); }
-  .card dd .coord { font-family: var(--data); font-size: .74rem; color: var(--ink-2); display: block; margin-top: .1rem; }
-
-  /* ===================== SCENARIOS ===================== */
-  .scenarios { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: .9rem; }
-  .scenario {
-    border: 1px solid var(--rule); border-top: 3px solid var(--accent);
-    border-radius: 0 0 5px 5px; background: var(--panel); padding: 1rem 1.05rem;
-  }
-  .scenario h3 { font-size: .98rem; font-weight: 700; margin-bottom: .12rem; }
-  .scenario .who { font-size: .84rem; color: var(--ink-2); margin: 0 0 .75rem; max-width: none; }
-  .scenario ul { list-style: none; padding: 0; margin: 0 0 .85rem; max-width: none; }
-  .scenario li {
-    display: flex; justify-content: space-between; gap: .7rem; font-size: .84rem;
-    padding: .28rem 0; border-bottom: 1px dotted var(--rule-strong);
-  }
-  .scenario li span:last-child { font-family: var(--data); font-variant-numeric: tabular-nums; flex: none; color: var(--ink-2); }
-  .scenario .grand { display: flex; justify-content: space-between; align-items: baseline; padding-top: .55rem; border-top: 2px solid var(--ink); }
-  .scenario .grand b { font-family: var(--display); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; }
-  .scenario .grand span { font-family: var(--data); font-variant-numeric: tabular-nums; font-size: 1.2rem; font-weight: 700; color: var(--accent-ink); }
-  .scenario .usd { font-family: var(--data); font-size: .76rem; color: var(--ink-2); text-align: right; margin-top: .1rem; }
-
-  /* ===================== BRIEFING ===================== */
-  .brief { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.3rem 2rem; }
-  .brief-item h3 { font-size: .93rem; font-weight: 700; margin-bottom: .28rem; display: flex; align-items: baseline; gap: .45rem; }
-  .brief-item h3::before { content: ""; width: .48rem; height: .48rem; background: var(--accent); border-radius: 50%; flex: none; }
-  .brief-item p { font-size: .88rem; color: var(--ink-2); margin: 0; max-width: none; }
-  .brief-item p strong { color: var(--ink); }
-
-  /* ===================== INSTALL STEPS ===================== */
-  .steps { counter-reset: step; list-style: none; padding: 0; max-width: 44rem; }
-  .steps li {
-    counter-increment: step; position: relative; padding: .7rem 0 .7rem 2.7rem;
-    border-bottom: 1px solid var(--rule); font-size: .95rem;
-  }
-  .steps li:last-child { border-bottom: 0; }
-  .steps li::before {
-    content: counter(step); position: absolute; left: 0; top: .72rem;
-    width: 1.75rem; height: 1.75rem; border-radius: 50%;
+  .swap {
+    position: absolute; right: .9rem; top: 50%; transform: translateY(-50%);
+    width: 2.5rem; height: 2.5rem; border-radius: 50%;
     background: var(--accent); color: var(--ground);
-    font-family: var(--data); font-size: .82rem; font-weight: 700;
-    display: grid; place-items: center;
+    border: 3px solid var(--ground); cursor: pointer;
+    font-size: 1.1rem; line-height: 1; display: grid; place-items: center; z-index: 2;
   }
-  .steps li b { font-family: var(--display); }
-  .steps li .said {
-    display: inline-block; font-family: var(--data); font-size: .84rem;
-    background: var(--panel-2); border: 1px solid var(--rule); border-radius: 3px; padding: .05rem .35rem;
+  .swap:active { transform: translateY(-50%) scale(.93); }
+
+  /* ---------- answer ---------- */
+  .answer {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+    box-shadow: var(--shadow); overflow: hidden; margin-bottom: .9rem;
   }
 
-  /* ===================== FOOTER ===================== */
-  footer { border-top: 2px solid var(--ink); padding-top: 1.3rem; font-size: .84rem; color: var(--ink-2); }
-  footer h3 { font-size: .84rem; margin-bottom: .45rem; }
-  footer ul { padding-left: 1.1rem; max-width: 44rem; }
-  footer li { margin-bottom: .22rem; }
-
-  @media (prefers-reduced-motion: reduce) {
-    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  .leave { padding: 1.1rem 1.1rem .9rem; background: var(--accent-soft); border-bottom: 1px solid var(--rule); }
+  .leave .lbl { font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); opacity: .8; }
+  .leave .big {
+    display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; margin-top: .15rem;
   }
+  .leave .t {
+    font-family: var(--data); font-variant-numeric: tabular-nums;
+    font-size: 2.7rem; font-weight: 700; letter-spacing: -.045em; line-height: 1; color: var(--accent-ink);
+  }
+  .leave .cd { font-size: 1.05rem; font-weight: 700; color: var(--accent-ink); }
+  .leave .arrive { font-size: .92rem; color: var(--ink-2); margin-top: .35rem; }
+
+  .leave.bad { background: var(--oxide-soft); }
+  .leave.bad .lbl, .leave.bad .t, .leave.bad .cd { color: var(--oxide); }
+
+  /* steps */
+  .steps { list-style: none; margin: 0; padding: .3rem 0; }
+  .steps li { display: flex; gap: .75rem; padding: .75rem 1.1rem; align-items: flex-start; }
+  .steps li + li { border-top: 1px solid var(--rule); }
+  .dot {
+    flex: none; width: 1.7rem; height: 1.7rem; border-radius: 50%;
+    background: var(--accent); color: var(--ground);
+    font-family: var(--data); font-size: .8rem; font-weight: 700;
+    display: grid; place-items: center; margin-top: .05rem;
+  }
+  .dot.pay { background: var(--oxide); }
+  .steps li > span:last-child { display: block; min-width: 0; }
+  .step-main { display: block; font-size: 1rem; font-weight: 600; letter-spacing: -.01em; }
+  .step-sub { display: block; font-size: .87rem; color: var(--ink-2); margin-top: .2rem; line-height: 1.4; }
+  .step-sub b { color: var(--ink); font-weight: 600; }
+
+  /* cost */
+  .cost { display: flex; align-items: center; gap: .9rem; padding: .9rem 1.1rem; border-top: 1px solid var(--rule); background: var(--panel); }
+  .cost .amt {
+    font-family: var(--data); font-variant-numeric: tabular-nums;
+    font-size: 1.85rem; font-weight: 700; letter-spacing: -.03em; line-height: 1;
+  }
+  .cost .side { font-size: .84rem; color: var(--ink-2); line-height: 1.35; }
+  .cost .side b { color: var(--ink); }
+
+  /* last bus */
+  .lastbus { border-radius: 10px; padding: .8rem .95rem; margin-bottom: .9rem; border: 1px solid var(--rule); background: var(--card); }
+  .lastbus .lbl { font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+  .lastbus .row { display: flex; align-items: baseline; gap: .55rem; margin-top: .1rem; }
+  .lastbus .t { font-family: var(--data); font-variant-numeric: tabular-nums; font-size: 1.5rem; font-weight: 700; letter-spacing: -.03em; }
+  .lastbus .cd { font-size: .95rem; font-weight: 700; }
+  .lastbus .why { font-size: .87rem; color: var(--ink-2); margin-top: .25rem; line-height: 1.4; }
+  .lastbus.ok   { background: var(--olive-soft); border-color: var(--olive); }
+  .lastbus.ok .t, .lastbus.ok .cd { color: var(--olive); }
+  .lastbus.soon, .lastbus.gone { background: var(--oxide-soft); border-color: var(--oxide); }
+  .lastbus.soon .t, .lastbus.soon .cd,
+  .lastbus.gone .t, .lastbus.gone .cd { color: var(--oxide); }
+
+  /* later */
+  .later { margin-bottom: 1.2rem; }
+  .later .lbl { font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: .35rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: .3rem; }
+  .chips span {
+    font-family: var(--data); font-variant-numeric: tabular-nums; font-size: .85rem;
+    padding: .3rem .5rem; border-radius: 5px; background: var(--card);
+    border: 1px solid var(--rule); color: var(--ink-2);
+  }
+
+  /* need to know */
+  details.nk { background: var(--card); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
+  details.nk > summary {
+    cursor: pointer; list-style: none; padding: .8rem .95rem;
+    font-size: .93rem; font-weight: 700; display: flex; align-items: center;
+  }
+  details.nk > summary::-webkit-details-marker { display: none; }
+  details.nk > summary::after { content: "▸"; margin-left: auto; color: var(--ink-3); }
+  details.nk[open] > summary::after { content: "▾"; }
+  details.nk[open] > summary { border-bottom: 1px solid var(--rule); }
+  .nk-body { padding: .3rem 0; }
+  .nk-item { padding: .7rem .95rem; font-size: .9rem; color: var(--ink-2); line-height: 1.45; }
+  .nk-item + .nk-item { border-top: 1px solid var(--rule); }
+  .nk-item b { color: var(--ink); }
+
+  .fine { font-size: .78rem; color: var(--ink-3); text-align: center; margin-top: 1.3rem; line-height: 1.5; }
+  .fine a { color: var(--ink-3); }
+
+  button:focus-visible, select:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
-<div class="bar">
-  <span class="bar-brand">Santorini <span>Bus</span></span>
-  <span class="clock" id="clock">Santorini time <b>—:—</b></span>
-  <nav class="bar-nav">
-    <a href="#next">Next bus</a>
-    <a href="#model">How it works</a>
-    <a href="#fares">Fares</a>
-    <a href="#times">Timetables</a>
-    <a href="#calc">Cost</a>
-    <a href="#stops">Stops</a>
-    <a href="#usa">For Americans</a>
-    <a href="#install">Put on phone</a>
-  </nav>
-</div>
+<div class="app">
 
-<div class="wrap">
+  <div class="top">
+    <h1>Santorini <span>Bus</span></h1>
+    <span class="now" id="now">—:—</span>
+  </div>
 
-<header class="masthead">
-  <div class="eyebrow">KTEL Santorini · Official timetable of 14 July 2026 · Built for travelers from the U.S.</div>
-  <h1>Santorini is one bus hub<br>and <em>ten spokes.</em></h1>
-  <p class="standfirst">
-    Every public bus on the island runs to or from Fira. Once you see the network that way,
-    the timetable stops being a wall of Greek place names and becomes a question with two
-    answers: one ticket, or two. Here is the whole system — official fares, official departure
-    times, and where to physically stand.
+  <div class="pickers">
+    <div class="pick">
+      <label for="from">I'm at</label>
+      <select id="from"></select>
+    </div>
+    <button class="swap" id="swap" type="button" title="Swap" aria-label="Swap start and destination">⇅</button>
+    <div class="pick">
+      <label for="to">Going to</label>
+      <select id="to"></select>
+    </div>
+  </div>
+
+  <div class="answer" id="answer"></div>
+  <div id="lastbus"></div>
+  <div class="later" id="later"></div>
+
+  <details class="nk">
+    <summary>Need to know</summary>
+    <div class="nk-body">
+      <div class="nk-item"><b>Cash only.</b> A conductor comes down the aisle and takes euros. No cards, no Apple Pay. Keep small notes and coins.</div>
+      <div class="nk-item"><b>Buy a ticket on each bus.</b> If you change buses, you pay twice. There are no day passes or transfers.</div>
+      <div class="nk-item"><b>Look for the town name, not a number.</b> The destination is on a card in the windshield.</div>
+      <div class="nk-item"><b>Kids.</b> Under 7 free, ages 7–12 half price. Luggage is free and goes underneath.</div>
+      <div class="nk-item"><b>Stuck?</b> Fira taxi rank: <b>+30 22860 22555</b>. Bus station: <b>+30 22860 25404</b>. Emergency: <b>112</b>.</div>
+      <div class="nk-item"><b>Times are 24-hour.</b> 22:50 means 10:50 p.m.</div>
+    </div>
+  </details>
+
+  <p class="fine">
+    Official KTEL timetable, revised 14 July 2026.<br>
+    Schedules shift in season — check the printed board at Fira station.
   </p>
-  <div class="stamp-row">
-    <span class="stamp live">Official KTEL sheet · rev. 14/07/2026</span>
-    <span class="stamp">Cash only · euros</span>
-    <span class="stamp">Almost everything is €2.20</span>
-    <span class="stamp">No day passes</span>
-    <span class="stamp">€1 ≈ $1.1555</span>
-  </div>
-</header>
-
-<!-- ============================================================ -->
-<section id="next">
-  <div class="sec-head">
-    <span class="sec-num">01</span>
-    <h2>Next bus, right now</h2>
-  </div>
-
-  <p>
-    This reads the official timetable against the clock <em>in Santorini</em>, so it is correct
-    whether you are standing in Fira or planning from your couch in the States.
-  </p>
-
-  <div class="board">
-    <div class="board-controls">
-      <div class="field">
-        <label for="rt-sel">Route</label>
-        <select id="rt-sel"></select>
-      </div>
-      <div class="field">
-        <label id="dir-label">Direction</label>
-        <div class="dir-toggle" role="group" aria-labelledby="dir-label">
-          <button type="button" id="dir-out" aria-pressed="true">From Fira</button>
-          <button type="button" id="dir-back" aria-pressed="false">To Fira</button>
-        </div>
-      </div>
-    </div>
-    <div class="board-out">
-      <div class="next-hero" id="next-hero"></div>
-      <div class="upcoming" id="upcoming"></div>
-      <div class="lastbus" id="lastbus"></div>
-    </div>
-    <div class="board-foot"><p id="board-foot"></p></div>
-  </div>
-
-  <div class="legend">
-    <span><b class="k-exp">EXP</b> — express, skips the inland villages</span>
-    <span><b class="k-sch">ΣΧ</b> — school-days only, <b>does not run in August</b></span>
-  </div>
-</section>
-
-<!-- ============================================================ -->
-<section id="model">
-  <div class="sec-head">
-    <span class="sec-num">02</span>
-    <h2>The mental model</h2>
-  </div>
-
-  <p>
-    There is no cross-island bus. Nothing connects Oia to Perissa, or the airport to Kamari, or
-    the ferry port to anywhere except Fira. KTEL runs a pure <strong>hub-and-spoke</strong>
-    network: Fira Central Bus Station is the hub, and every destination sits at the end of its
-    own spoke.
-  </p>
-
-  <div class="note">
-    <strong>The only routing rule you need</strong>
-    <p><b>If Fira is one end of your trip</b> — one bus, one ticket, one fare.</p>
-    <p><b>If Fira is not one end of your trip</b> — two buses, two tickets, two fares, plus a wait
-    at Fira. There are no transfer tickets and no free connections. You get off, walk to the next
-    bay, and pay again.</p>
-  </div>
-
-  <p class="swipe-hint">Swipe the diagram sideways →</p>
-
-  <figure class="fig">
-    <div class="fig-scroll">
-      <svg viewBox="0 132 920 532" role="img"
-           aria-label="Radial map of the Santorini bus network. Fira Central Bus Station sits at the center; ten spokes radiate outward to Oia, Firostefani and Imerovigli, Santorini Airport, Monolithos, Kamari, Perissa and Perivolos, the inland villages of Pyrgos, Megalochori and Emporio continuing to Vlychada, Akrotiri, and Athinios Ferry Port. Each spoke is labeled with its official one-way fare and run time. The Oia and Perissa spokes are highlighted to show that traveling between them requires changing buses at Fira and buying a second ticket.">
-        <defs>
-          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
-          </marker>
-          <marker id="ar-hi" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
-          </marker>
-        </defs>
-
-        <g stroke="currentColor" stroke-width="1.6" opacity=".55" marker-end="url(#ar)" marker-start="url(#ar)">
-          <line x1="460" y1="310" x2="414" y2="177"/>
-          <line x1="460" y1="310" x2="700" y2="233"/>
-          <line x1="460" y1="310" x2="724" y2="376"/>
-          <line x1="460" y1="310" x2="452" y2="551"/>
-          <line x1="460" y1="310" x2="263" y2="493"/>
-          <line x1="460" y1="310" x2="216" y2="299"/>
-          <line x1="460" y1="310" x2="770" y2="300"/>
-        </g>
-
-        <g stroke="var(--accent)" stroke-width="3" marker-end="url(#ar-hi)" marker-start="url(#ar-hi)">
-          <line x1="460" y1="310" x2="251" y2="176"/>
-          <line x1="460" y1="310" x2="618" y2="541"/>
-        </g>
-
-        <circle cx="460" cy="310" r="56" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2.5"/>
-        <text x="460" y="307" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
-              font-size="19" font-weight="700" fill="var(--accent-ink)" letter-spacing="1">FIRA</text>
-        <text x="460" y="326" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
-              font-size="10.5" fill="var(--accent-ink)">Central Station</text>
-
-        <g font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="600">
-          <rect x="176" y="152" width="150" height="48" rx="3" fill="var(--panel)" stroke="var(--accent)" stroke-width="1.8"/>
-          <text x="251" y="172" text-anchor="middle" fill="var(--ink)">Oia</text>
-          <text x="251" y="188" text-anchor="middle" font-size="10" font-weight="400" fill="var(--ink-2)">sunset village · NW tip</text>
-
-          <rect x="336" y="146" width="156" height="48" rx="3" fill="var(--panel)" stroke="var(--rule-strong)" stroke-width="1.4"/>
-          <text x="414" y="166" text-anchor="middle" fill="var(--ink)">Firostefani · Imerovigli</text>
-          <text x="414" y="182" text-anchor="middle" font-size="10" font-weight="400" fill="var(--ink-2)">caldera rim walk</text>
-
-          <rect x="626" y="209" width="148" height="48" rx="3" fill="var(--panel)" stroke="var(--rule-strong)" stroke-width="1.4"/>
-          <text x="700" y="229" text-anchor="middle" fill="var(--ink)">Airport (JTR)</text>
-          <text x="700" y="245" text-anchor="middle" font-size="10" font-weight="400" fill="var(--ink-2)">curbside at arrivals</text>
-
-          <rect x="700" y="278" width="150" height="44" rx="3" fill="var(--panel)" stroke="var(--rule-strong)" stroke-width="1.4"/>
-          <text x="775" y="296" text-anchor="middle" fill="var(--ink)">Monolithos</text>
-          <text x="775" y="311" text-anchor="middle" font-size="10" font-weight="400" fill="var(--ink-2)">quiet family beach</text>
-
-          <rect x="650" y="352" width="148" height="48" rx="3" fill="var(--panel)" stroke="var(--rule-strong)" stroke-width="1.4"/>
-          <text x="724" y="372" text-anchor="middle" fill="var(--ink)">Kamari</text>
-          <text x="724" y="388" text-anchor="middle" font-size="10" font-weight="400" fill="var(--ink-2)">black sand · open-air cinema</text>
-
-          <rect x="540" y="517" width="156" height="48" rx="3" fill="var(--panel)" stroke="var(--accent)" stroke-width="1.8"/>
-          <text x="618" y="537" text-anchor="middle" fill="var(--ink)">Perissa · Perivolos</text>
-          <text x="618" y="553" text-anchor="middle" font-size="10" font-weight="400" fill="var(--ink-2)">long black-sand strip</text>
-
-          <rect x="366" y="527" width="172" height="48" rx="3" fill="var(--panel)" stroke="var(--rule-strong)" stroke-width="1.4"/>
-          <text x="452" y="547" text-anchor="middle" fill="var(--ink)">Pyrgos · Emporio · Vlychada</text>
-          <text x="452" y="563" text-anchor="middle" font-size="10" font-weight="400" fill="var(--ink-2)">inland run, few departures</text>
-
-          <rect x="188" y="469" width="150" height="48" rx="3" fill="var(--panel)" stroke="var(--rule-strong)" stroke-width="1.4"/>
-          <text x="263" y="489" text-anchor="middle" fill="var(--ink)">Akrotiri</text>
-          <text x="263" y="505" text-anchor="middle" font-size="10" font-weight="400" fill="var(--ink-2)">ruins · Red Beach trail</text>
-
-          <rect x="141" y="275" width="150" height="48" rx="3" fill="var(--panel)" stroke="var(--rule-strong)" stroke-width="1.4"/>
-          <text x="216" y="295" text-anchor="middle" fill="var(--ink)">Athinios Port</text>
-          <text x="216" y="311" text-anchor="middle" font-size="10" font-weight="400" fill="var(--ink-2)">all ferries dock here</text>
-        </g>
-
-        <g font-family="ui-monospace, Menlo, monospace" font-size="11" text-anchor="middle">
-          <rect x="316" y="227" width="82" height="18" fill="var(--ground)"/>
-          <text x="357" y="240" fill="var(--accent)" font-weight="700">€2.20 · 20m</text>
-
-          <rect x="392" y="199" width="72" height="18" fill="var(--ground)"/>
-          <text x="428" y="212" fill="var(--ink-2)">€2.20 · 5m</text>
-
-          <rect x="542" y="258" width="76" height="18" fill="var(--ground)"/>
-          <text x="580" y="271" fill="var(--ink-2)">€2.20 · 10m</text>
-
-          <rect x="588" y="296" width="76" height="18" fill="var(--ground)"/>
-          <text x="626" y="309" fill="var(--ink-2)">€2.20 · 10m</text>
-
-          <rect x="576" y="337" width="76" height="18" fill="var(--ground)"/>
-          <text x="614" y="350" fill="var(--ink-2)">€2.20 · 15m</text>
-
-          <rect x="501" y="415" width="82" height="18" fill="var(--ground)"/>
-          <text x="542" y="428" fill="var(--accent)" font-weight="700">€2.70 · 25m</text>
-
-          <rect x="418" y="447" width="76" height="18" fill="var(--ground)"/>
-          <text x="456" y="460" fill="var(--ink-2)">€2.70 · 30m</text>
-
-          <rect x="324" y="392" width="76" height="18" fill="var(--ground)"/>
-          <text x="362" y="405" fill="var(--ink-2)">€2.20 · 20m</text>
-
-          <rect x="300" y="296" width="76" height="18" fill="var(--ground)"/>
-          <text x="338" y="309" fill="var(--ink-2)">€2.70 · 20m</text>
-        </g>
-
-        <g font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
-          <rect x="600" y="600" width="300" height="52" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/>
-          <text x="616" y="620" font-size="11.5" font-weight="700" fill="var(--accent-ink)">Oia → Perissa costs €4.90, not €2.70</text>
-          <text x="616" y="637" font-size="10.5" fill="var(--accent-ink)">Two spokes. Change at Fira. Buy a second ticket.</text>
-        </g>
-
-        <g font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="10.5" fill="var(--ink-3)">
-          <text x="20" y="622">Fares and run times from the official KTEL sheet, revised 14 July 2026.</text>
-          <text x="20" y="640">Spoke length is drawn to journey time, not geography.</text>
-        </g>
-      </svg>
-    </div>
-    <figcaption>
-      Every KTEL route is a spoke terminating at Fira. Nothing runs village-to-village, so a trip
-      that skips the hub does not exist — it is two trips. The two highlighted spokes show the
-      most common tourist mistake: budgeting one fare for Oia&nbsp;→&nbsp;Perissa when the network
-      charges two.
-    </figcaption>
-  </figure>
-</section>
-
-<!-- ============================================================ -->
-<section id="fares">
-  <div class="sec-head">
-    <span class="sec-num">03</span>
-    <h2>Official fares</h2>
-  </div>
-
-  <div class="note good">
-    <strong>The fare structure is simpler than the internet suggests</strong>
-    <p>
-      On the official KTEL sheet, <b>every destination on the island is €2.20</b> — with exactly
-      three exceptions at <b>€2.70</b>: Athinios Port, Perissa and Vlychada. That is the entire
-      pricing system. Third-party travel sites quoting €1.60, €1.80 or €2.50 are out of date.
-    </p>
-  </div>
-
-  <div class="table-scroll">
-    <table>
-      <thead>
-        <tr>
-          <th>Destination from Fira</th>
-          <th class="num">Fare</th>
-          <th class="num">Run time</th>
-          <th>Service in August</th>
-          <th class="num">First / last from Fira</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="route">Airport (JTR)</td>
-          <td class="num fare">€2.20</td>
-          <td class="num">10 min</td>
-          <td>18 a day, roughly hourly</td>
-          <td class="num">06:00 / 23:00</td>
-        </tr>
-        <tr>
-          <td class="route">Oia</td>
-          <td class="num fare">€2.20</td>
-          <td class="num">20 min</td>
-          <td>29 a day, every 30 min</td>
-          <td class="num">07:00 / 22:30</td>
-        </tr>
-        <tr>
-          <td class="route">Kamari</td>
-          <td class="num fare">€2.20</td>
-          <td class="num">15 min</td>
-          <td>35 a day — the densest spoke</td>
-          <td class="num">07:15 / 23:30</td>
-        </tr>
-        <tr>
-          <td class="route">Perissa &amp; Perivolos</td>
-          <td class="num fare">€2.70</td>
-          <td class="num">~25 min <span class="soft">(~20 EXP)</span></td>
-          <td>30 a day, many express</td>
-          <td class="num">07:00 / 00:15</td>
-        </tr>
-        <tr>
-          <td class="route">Akrotiri <span class="soft">(Red Beach)</span></td>
-          <td class="num fare">€2.20</td>
-          <td class="num">20 min</td>
-          <td>16 a day</td>
-          <td class="num">08:30 / 21:15</td>
-        </tr>
-        <tr>
-          <td class="route">Firostefani &amp; Imerovigli</td>
-          <td class="num fare">€2.20</td>
-          <td class="num">5 min</td>
-          <td>15 a day, hourly</td>
-          <td class="num">08:30 / 22:00</td>
-        </tr>
-        <tr>
-          <td class="route">Monolithos</td>
-          <td class="num fare">€2.20</td>
-          <td class="num">10 min</td>
-          <td>7 a day</td>
-          <td class="num">07:15 / 21:00</td>
-        </tr>
-        <tr>
-          <td class="route">Vlychada</td>
-          <td class="num fare">€2.70</td>
-          <td class="num">30 min</td>
-          <td>4 a day only</td>
-          <td class="num">07:00 / 17:00</td>
-        </tr>
-        <tr>
-          <td class="route">Vourvoulos</td>
-          <td class="num fare">€2.20</td>
-          <td class="num">~10 min</td>
-          <td>1 a day out, 2 back</td>
-          <td class="num">14:00 / 14:00</td>
-        </tr>
-        <tr>
-          <td class="route">Athinios Ferry Port</td>
-          <td class="num fare">€2.70</td>
-          <td class="num">20 min</td>
-          <td>No fixed timetable — meets the boats</td>
-          <td class="num">Ferry-linked</td>
-        </tr>
-        <tr>
-          <td class="route">Pyrgos · Megalochori · Emporio</td>
-          <td class="num fare">€2.20</td>
-          <td class="num">15–25 min</td>
-          <td>On the non-express Perissa run</td>
-          <td class="num">See Perissa</td>
-        </tr>
-        <tr>
-          <td class="route">Karterados · Messaria · Vothonas</td>
-          <td class="num fare">€2.20</td>
-          <td class="num">5–15 min</td>
-          <td>On the non-express Perissa run</td>
-          <td class="num">See Perissa</td>
-        </tr>
-        <tr>
-          <td class="route">Baxedes</td>
-          <td class="num fare">€2.20</td>
-          <td class="num">~30 min</td>
-          <td>On the Oia corridor, limited</td>
-          <td class="num">Ask at Fira</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p class="soft" style="margin-top:.7rem;">
-    Fares and the Airport (10′) and Athinios (20′) run times are printed on the official sheet.
-    Other run times are derived from the published outbound/return time offsets; the Perissa
-    figure is an estimate, since that route has no clean paired offset.
-  </p>
-
-  <h3 class="sub">Who pays what</h3>
-  <ul>
-    <li><strong>Adults and anyone 13+</strong> — full fare, every leg.</li>
-    <li><strong>Children 7–12</strong> — half fare.</li>
-    <li><strong>Children under 7</strong> — free, no ticket needed.</li>
-    <li><strong>Luggage</strong> — free. No baggage ticket exists. Big bags go in the bay underneath.</li>
-  </ul>
-</section>
-
-<!-- ============================================================ -->
-<section id="times">
-  <div class="sec-head">
-    <span class="sec-num">04</span>
-    <h2>Full official timetables</h2>
-  </div>
-
-  <p>
-    Every departure on the KTEL sheet of 14 July 2026. Tap a route to open it. All times are
-    24-hour: <strong>22:30 is 10:30 p.m.</strong>
-  </p>
-
-  <div class="legend">
-    <span><b class="k-exp">Green</b> = EXP express, skips inland villages</span>
-    <span><b class="k-sch">Struck through</b> = ΣΧ school-days only, not running in August</span>
-  </div>
-
-  <div id="timetables"></div>
-</section>
-
-<!-- ============================================================ -->
-<section id="calc">
-  <div class="sec-head">
-    <span class="sec-num">05</span>
-    <h2>What your trip actually costs</h2>
-  </div>
-
-  <p>
-    Pick two points. This applies the hub rule, prices every leg at the official fare, and
-    converts to dollars.
-  </p>
-
-  <div class="calc">
-    <div class="calc-grid">
-      <div class="field">
-        <label for="from">Starting from</label>
-        <select id="from"></select>
-      </div>
-      <div class="field">
-        <label for="to">Going to</label>
-        <select id="to"></select>
-      </div>
-      <div class="field">
-        <label for="pax">Travelers 13+</label>
-        <input type="number" id="pax" value="2" min="1" max="20" step="1">
-      </div>
-      <div class="field">
-        <label for="kids">Children 7–12</label>
-        <input type="number" id="kids" value="0" min="0" max="20" step="1">
-      </div>
-      <div class="field">
-        <label for="rate">USD per €1</label>
-        <input type="number" id="rate" value="1.1555" min="0.5" max="2" step="0.0001">
-      </div>
-      <div class="toggle-row">
-        <input type="checkbox" id="rt" checked>
-        <label for="rt">Round trip</label>
-      </div>
-    </div>
-
-    <div class="calc-out">
-      <div class="legs" id="legs"></div>
-      <div class="totals" id="totals"></div>
-      <p class="soft" id="footnote" style="margin:0;max-width:none;"></p>
-    </div>
-  </div>
-
-  <div class="note">
-    <strong>Compare before you book a transfer</strong>
-    <p>
-      Airport → Fira is <b>€2.20</b> and takes <b>10 minutes</b>. The same trip is <b>€25–35</b> by
-      taxi (no meter — agree the price before you get in; it includes a €4 airport surcharge) or
-      <b>€40–60</b> for a pre-booked private sedan. Airport → Oia runs €40–55 by taxi against
-      €4.40 on two buses.
-    </p>
-    <p>
-      The catch: Santorini licenses roughly 30 taxis for the whole island, and the arrivals queue
-      can hit 90 minutes when several flights land together. In August the bus is frequently both
-      cheaper <em>and</em> faster.
-    </p>
-  </div>
-</section>
-
-<!-- ============================================================ -->
-<section id="stops">
-  <div class="sec-head">
-    <span class="sec-num">06</span>
-    <h2>Where to physically stand</h2>
-  </div>
-
-  <p>
-    Stops here are not marked the way American transit stops are. Most are an unsigned pullout on
-    the main road with a rail and a bench. Buses show their destination on a windshield card in
-    Greek and Latin script — <strong>there are no route numbers to look for</strong>.
-  </p>
-
-  <div class="cards">
-
-    <div class="card">
-      <div class="card-top"><h3>Fira Central Bus Station</h3><span class="price">HUB</span></div>
-      <div class="chips"><span class="chip hi">All routes</span><span class="chip">Staffed booth</span><span class="chip">Printed board</span></div>
-      <dl>
-        <dt>Address</dt><dd>Σταθμός Λεωφορείων, Thira 847 00<span class="coord">36.4200° N, 25.4317° E</span></dd>
-        <dt>Finding it</dt><dd>Two blocks south of the main square on 25is Martiou, the road down the spine of Fira. It is an open paved lot, not a building — buses park nose-in around the edges.</dd>
-        <dt>On arrival</dt><dd>Read the printed board first, then ask staff which bay your village leaves from. Bays are not permanently assigned.</dd>
-      </dl>
-    </div>
-
-    <div class="card">
-      <div class="card-top"><h3>Santorini Airport (JTR)</h3><span class="price">€2.20</span></div>
-      <div class="chips"><span class="chip hi">10 min to Fira</span><span class="chip">To Fira only</span><span class="chip lo">Nothing after 23:10</span></div>
-      <dl>
-        <dt>Address</dt><dd>Santorini Nat'l Airport, Monolithos 847 00<span class="coord">Terminal ≈ 36.399° N, 25.479° E</span></dd>
-        <dt>Finding it</dt><dd>Exit arrivals and turn right along the curb, between the arrivals and departures buildings. A marked shelter on the terminal road — not in the car park.</dd>
-        <dt>Warning</dt><dd>Last bus off the airport is 23:10 and there is no night service. A later arrival means a taxi — arrange it before you fly.</dd>
-      </dl>
-    </div>
-
-    <div class="card">
-      <div class="card-top"><h3>Athinios Ferry Port</h3><span class="price">€2.70</span></div>
-      <div class="chips"><span class="chip">To Fira only</span><span class="chip lo">No fixed timetable</span></div>
-      <dl>
-        <dt>Address</dt><dd>Athinios Port, Thira 847 00<span class="coord">≈ 36.382° N, 25.428° E</span></dd>
-        <dt>Finding it</dt><dd>Buses line up on the quay straight ahead as you walk off the ferry ramp, past the hotel touts. Board fast — they fill and leave.</dd>
-        <dt>Warning</dt><dd>Every ferry unloads onto one small quay at the bottom of a cliff road. Miss the bus and the next one waits for the next boat.</dd>
-      </dl>
-    </div>
-
-    <div class="card">
-      <div class="card-top"><h3>Oia</h3><span class="price">€2.20</span></div>
-      <div class="chips"><span class="chip hi">Every 30 min</span><span class="chip">Last back 22:50</span></div>
-      <dl>
-        <dt>Address</dt><dd>Thiras–Oias road, Oia 847 02<span class="coord">Village ≈ 36.462° N, 25.375° E</span></dd>
-        <dt>Finding it</dt><dd>At the eastern entrance to the village by the car park — you cannot drive into Oia itself. Walk the pedestrian lanes 10–15 minutes to reach the caldera edge.</dd>
-        <dt>Warning</dt><dd>The post-sunset queue is the worst crowd crush on the island. See section 07.</dd>
-      </dl>
-    </div>
-
-    <div class="card">
-      <div class="card-top"><h3>Kamari</h3><span class="price">€2.20</span></div>
-      <div class="chips"><span class="chip hi">35 buses a day</span><span class="chip hi">Runs to 23:45</span></div>
-      <dl>
-        <dt>Address</dt><dd>Kamari main road, Kamari 847 00<span class="coord">≈ 36.376° N, 25.480° E</span></dd>
-        <dt>Finding it</dt><dd>On the inland road at the village entrance, a short walk back from the beachfront promenade. Follow signs toward the beach for the black sand.</dd>
-        <dt>Best for</dt><dd>A no-planning beach day. Best timetable on the island — you can leave whenever.</dd>
-      </dl>
-    </div>
-
-    <div class="card">
-      <div class="card-top"><h3>Perissa &amp; Perivolos</h3><span class="price">€2.70</span></div>
-      <div class="chips"><span class="chip hi">Latest service</span><span class="chip hi">Out to 00:15</span><span class="chip">EXP available</span></div>
-      <dl>
-        <dt>Address</dt><dd>Perissa main road, Perissa 847 03<span class="coord">≈ 36.352° N, 25.474° E</span></dd>
-        <dt>Finding it</dt><dd>Top of the main beach road under Mesa Vouno, the black rock. Perivolos is a further stop along the same strip.</dd>
-        <dt>Best for</dt><dd>Dinner on a beach with a bus home. The only spoke running past midnight — but note the last bus <em>back</em> to Fira is 22:30.</dd>
-      </dl>
-    </div>
-
-    <div class="card">
-      <div class="card-top"><h3>Akrotiri &amp; Red Beach</h3><span class="price">€2.20</span></div>
-      <div class="chips"><span class="chip">16 a day</span><span class="chip lo">Last back 21:35</span></div>
-      <dl>
-        <dt>Address</dt><dd>Akrotiri village / Red Beach car park, Akrotiri 847 00<span class="coord">≈ 36.352° N, 25.404° E</span></dd>
-        <dt>Finding it</dt><dd>The bus terminates at the trailhead parking above Red Beach; the archaeological site is a signed walk from the village stop.</dd>
-        <dt>Note</dt><dd>Nothing before 08:30 — this is the one spoke with no early service.</dd>
-      </dl>
-    </div>
-
-    <div class="card">
-      <div class="card-top"><h3>Firostefani &amp; Imerovigli</h3><span class="price">€2.20</span></div>
-      <div class="chips"><span class="chip">Hourly</span><span class="chip hi">5 min</span><span class="chip">Walkable</span></div>
-      <dl>
-        <dt>Address</dt><dd>Main road through each village, Thira 847 00</dd>
-        <dt>Finding it</dt><dd>Roadside pullouts on the inland road, above the caldera-facing hotels. Expect a stepped walk down to your hotel.</dd>
-        <dt>Best for</dt><dd>Skipping the fare entirely — the caldera footpath from Fira to Imerovigli is 30–40 minutes and the best free walk on the island.</dd>
-      </dl>
-    </div>
-
-    <div class="card">
-      <div class="card-top"><h3>Vlychada</h3><span class="price">€2.70</span></div>
-      <div class="chips"><span class="chip lo">Only 4 a day</span><span class="chip lo">Last back 17:30</span></div>
-      <dl>
-        <dt>Address</dt><dd>Vlychada marina area, Thira 847 00</dd>
-        <dt>Finding it</dt><dd>Terminates near the marina and the Tomato Industrial Museum; the moonscape beach is a short walk on.</dd>
-        <dt>Warning</dt><dd>Four departures out (07:00, 10:00, 14:00, 17:00) and four back (07:30, 10:30, 14:30, 17:30). Miss 17:30 and you are paying for a taxi.</dd>
-      </dl>
-    </div>
-
-    <div class="card">
-      <div class="card-top"><h3>Monolithos</h3><span class="price">€2.20</span></div>
-      <div class="chips"><span class="chip">7 a day</span><span class="chip">Last back 21:10</span></div>
-      <dl>
-        <dt>Address</dt><dd>Monolithos beach road, Monolithos 847 00</dd>
-        <dt>Finding it</dt><dd>Just north of the airport runway — the shallowest, calmest beach on the island and the one families pick.</dd>
-        <dt>Note</dt><dd>Out at 07:15, 10:00, 12:00, 14:00, 17:00, 19:00, 21:00. Only 10 minutes from Fira.</dd>
-      </dl>
-    </div>
-
-    <div class="card">
-      <div class="card-top"><h3>Pyrgos · Megalochori · Emporio</h3><span class="price">€2.20</span></div>
-      <div class="chips"><span class="chip">Non-express only</span><span class="chip lo">EXP skips these</span></div>
-      <dl>
-        <dt>Address</dt><dd>Village main roads, inland central Santorini</dd>
-        <dt>Finding it</dt><dd>Served by the <em>non-express</em> Perissa and Vlychada runs, which also call at Karterados, Mesaria, Vothonas and Santo Wines.</dd>
-        <dt>Warning</dt><dd>Boarding an EXP bus by mistake takes you straight past these villages to the coast. Confirm with the conductor before you sit down.</dd>
-      </dl>
-    </div>
-
-    <div class="card">
-      <div class="card-top"><h3>Vourvoulos</h3><span class="price">€2.20</span></div>
-      <div class="chips"><span class="chip lo">1 bus out per day</span></div>
-      <dl>
-        <dt>Address</dt><dd>Vourvoulos village, Thira 847 00</dd>
-        <dt>Finding it</dt><dd>North of Fira on the inland road toward Oia.</dd>
-        <dt>Warning</dt><dd>One departure from Fira (14:00) and two back (07:40, 14:10). Effectively a local commuter run, not a tourist route — walk or taxi instead.</dd>
-      </dl>
-    </div>
-
-  </div>
-</section>
-
-<!-- ============================================================ -->
-<section id="timing">
-  <div class="sec-head">
-    <span class="sec-num">07</span>
-    <h2>When the bus will let you down</h2>
-  </div>
-
-  <p>Four situations account for nearly every stranded traveler here. All four are predictable.</p>
-
-  <h3 class="sub">The Oia sunset crush</h3>
-  <p>
-    Several thousand people watch sunset from one village and then all want the same bus. Buses
-    leave Oia full and drive past Imerovigli and Firostefani without opening the doors. Either
-    queue at the Oia stop <strong>30–45 minutes before you actually want to leave</strong>, or
-    stay for dinner and ride back at 21:20 or later — buses run to <strong>22:50</strong>, which
-    is far later than most guides claim, so you have more room than you think.
-  </p>
-
-  <h3 class="sub">Flights out of JTR</h3>
-  <p>
-    The airport spoke runs roughly hourly, not every 20 minutes, and the last bus off the airport
-    is <strong>23:10</strong>. The ride itself is only 10 minutes, so the risk is not travel time
-    — it is that your bus was full and you waited an hour. Take the departure
-    <strong>one full slot earlier</strong> than the one that works on paper. From Oia, remember it
-    is two buses plus a transfer: allow 2 hours door to gate.
-  </p>
-
-  <h3 class="sub">Ferries out of Athinios</h3>
-  <p>
-    The port bus is timed to boats rather than a clock, and the cliff road above Athinios is a
-    single switchback that seizes up when a large ferry unloads. Get to Fira station
-    <strong>90 minutes before your sailing</strong> and ask staff directly which departure meets
-    your boat — this is the one route you cannot plan from a printed sheet.
-  </p>
-
-  <h3 class="sub">The thin spokes</h3>
-  <p>
-    Vlychada runs <strong>four times a day</strong>, last one back at 17:30. Vourvoulos has
-    <strong>one</strong> bus out. Akrotiri does not start until 08:30. On any of these,
-    <strong>photograph the return board the moment you get off the bus</strong>. Kamari and
-    Perissa are the forgiving ones — Kamari runs back to 23:45.
-  </p>
-</section>
-
-<!-- ============================================================ -->
-<section id="budgets">
-  <div class="sec-head">
-    <span class="sec-num">08</span>
-    <h2>Worked trip budgets</h2>
-  </div>
-
-  <p>Per person, in cash, for the whole stay — the number to pull from an ATM on arrival.</p>
-
-  <div class="scenarios">
-
-    <div class="scenario">
-      <h3>Fly in, base in Fira, 4 days</h3>
-      <p class="who">The most common American first trip. No car, everything from the hub.</p>
-      <ul>
-        <li><span>Airport → Fira</span><span>€2.20</span></li>
-        <li><span>Fira ⇄ Oia for sunset</span><span>€4.40</span></li>
-        <li><span>Fira ⇄ Kamari beach day</span><span>€4.40</span></li>
-        <li><span>Fira ⇄ Akrotiri &amp; Red Beach</span><span>€4.40</span></li>
-        <li><span>Fira ⇄ Perissa dinner</span><span>€5.40</span></li>
-        <li><span>Fira → Airport</span><span>€2.20</span></li>
-      </ul>
-      <div class="grand"><b>Per person</b><span>€23.00</span></div>
-      <div class="usd">≈ $26.58 · couple ≈ $53.16</div>
-    </div>
-
-    <div class="scenario">
-      <h3>Ferry in, base in Oia, 5 days</h3>
-      <p class="who">Every beach trip pays the double-spoke penalty. This is the expensive base.</p>
-      <ul>
-        <li><span>Athinios → Fira → Oia</span><span>€4.90</span></li>
-        <li><span>Oia ⇄ Fira, two town days</span><span>€8.80</span></li>
-        <li><span>Oia ⇄ Perissa <span class="soft">(2 tickets each way)</span></span><span>€9.80</span></li>
-        <li><span>Oia ⇄ Akrotiri <span class="soft">(2 tickets each way)</span></span><span>€8.80</span></li>
-        <li><span>Oia → Fira → Airport</span><span>€4.40</span></li>
-      </ul>
-      <div class="grand"><b>Per person</b><span>€36.70</span></div>
-      <div class="usd">≈ $42.41 · couple ≈ $84.82</div>
-    </div>
-
-    <div class="scenario">
-      <h3>Couple, 7 days, bus for everything</h3>
-      <p class="who">The realistic ceiling — two adults riding daily, plus a couple of late nights.</p>
-      <ul>
-        <li><span>Adult 1, heavy use</span><span>€42.00</span></li>
-        <li><span>Adult 2, heavy use</span><span>€42.00</span></li>
-        <li><span>Two taxi bailouts</span><span>€50.00</span></li>
-      </ul>
-      <div class="grand"><b>Two people</b><span>€134.00</span></div>
-      <div class="usd">≈ $154.84 for the week</div>
-    </div>
-
-  </div>
-
-  <div class="note">
-    <strong>Bus versus rental car, honestly</strong>
-    <p>
-      A week of buses for two lands around <b>€85–135</b>. A rental car in peak August runs roughly
-      <b>€60–90 per day</b> before fuel, and Fira, Oia and Pyrgos have almost no parking. Over four
-      days or more that is a difference of many hundreds of dollars.
-    </p>
-    <p>
-      Rent only if your plans center on the thin spokes — Vlychada, Vourvoulos, the inland villages
-      — or if you want to be somewhere remote after 22:00. Otherwise the bus wins on money, and
-      often on time.
-    </p>
-  </div>
-</section>
-
-<!-- ============================================================ -->
-<section id="usa">
-  <div class="sec-head">
-    <span class="sec-num">09</span>
-    <h2>Briefing for U.S. travelers</h2>
-  </div>
-
-  <p>Things that work differently than at home, in rough order of how badly they will trip you up.</p>
-
-  <div class="brief">
-
-    <div class="brief-item">
-      <h3>Your cards do not work on the bus</h3>
-      <p>
-        Fares are collected <strong>in cash euros by a conductor</strong> who walks the aisle once
-        the bus is moving. A few 2026 buses are trialing tap-to-pay; do not plan around it. No
-        Apple Pay, no U.S. credit card, no app, no ticket machine.
-      </p>
-    </div>
-
-    <div class="brief-item">
-      <h3>Carry small notes and coins</h3>
-      <p>
-        Conductors dislike €50 notes and on a full bus may not have change. Keep
-        <strong>€5 and €10 notes plus coins</strong> in a pocket you can reach standing up. Budget
-        <strong>€25–45 cash per person</strong> for a week of bus travel.
-      </p>
-    </div>
-
-    <div class="brief-item">
-      <h3>Get euros from a bank ATM</h3>
-      <p>
-        Use machines branded <strong>Piraeus, Alpha Bank, Eurobank or National Bank of Greece</strong>
-        — there are ATMs at JTR arrivals and several in Fira. Avoid standalone Euronet kiosks, which
-        carry high fees. When the screen offers to charge you in dollars, <strong>always decline</strong>
-        and choose euros; accepting is dynamic currency conversion and costs several percent.
-      </p>
-    </div>
-
-    <div class="brief-item">
-      <h3>Timetables are 24-hour</h3>
-      <p>
-        <strong>22:30 is 10:30 p.m.</strong> The last Oia bus back at 22:50 is 10:50 p.m.; the last
-        Perissa departure at 00:15 is a quarter past midnight. Boards are posted in Greek and
-        English, but times are never in a.m./p.m. form.
-      </p>
-    </div>
-
-    <div class="brief-item">
-      <h3>No route numbers, no passes</h3>
-      <p>
-        Buses are identified by <strong>destination on a windshield card</strong>, not a number.
-        Every leg is a separate single-ride ticket — no day passes, weekly passes, transfer credits
-        or return tickets exist. Ask a bay attendant if unsure; they are used to the question.
-      </p>
-    </div>
-
-    <div class="brief-item">
-      <h3>Read the Greek markings</h3>
-      <p>
-        <strong>ΣΧ</strong> next to a time means school-days only — <strong>it does not run in
-        August</strong>. <strong>EXP</strong> means express: it skips Karterados, Messaria, Pyrgos,
-        Megalochori and Emporio and goes straight to the coast. Both are struck through or
-        color-coded in the timetables above.
-      </p>
-    </div>
-
-    <div class="brief-item">
-      <h3>Entry rules changed in 2026</h3>
-      <p>
-        The EU's <strong>Entry/Exit System (EES) went fully operational on 10 April 2026</strong>, so
-        expect a photo and fingerprints at your first Schengen entry — usually Athens, not Santorini.
-        <strong>ETIAS is not yet in force</strong> as of August 2026; its launch slipped past the 2026
-        target and 2027 now looks likely. Verify at
-        <a href="https://travel.state.gov" target="_blank" rel="noopener">travel.state.gov</a> before you fly.
-      </p>
-    </div>
-
-    <div class="brief-item">
-      <h3>Passport validity</h3>
-      <p>
-        U.S. citizens get <strong>90 days visa-free in any rolling 180-day period</strong>. Your
-        passport must have been issued within the last 10 years and be valid at least
-        <strong>3 months beyond your planned departure</strong> from the Schengen area. Airlines
-        enforce this at check-in in the States.
-      </p>
-    </div>
-
-    <div class="brief-item">
-      <h3>Clock and phone</h3>
-      <p>
-        Santorini runs on EEST, <strong>UTC+3 — seven hours ahead of U.S. Eastern</strong> in August.
-        Emergency number is <strong>112</strong>, not 911. KTEL Santorini's Fira office is
-        <strong>+30 22860 25404</strong>; from a U.S. phone dial 011 30 22860 25404.
-      </p>
-    </div>
-
-    <div class="brief-item">
-      <h3>Tipping and etiquette</h3>
-      <p>
-        <strong>Do not tip the bus conductor</strong> — it is not done here and only confuses the
-        transaction. Give up your seat to older passengers. On a crowded run people stand the whole
-        way, and nobody forms an orderly line at the door.
-      </p>
-    </div>
-
-  </div>
-</section>
-
-<!-- ============================================================ -->
-<section id="install">
-  <div class="sec-head">
-    <span class="sec-num">10</span>
-    <h2>Put this on your phone</h2>
-  </div>
-
-  <div class="note good">
-    <strong>Put the downloaded file on your home screen — not the web link</strong>
-    <p>
-      If you only do one thing, do this one. The downloaded copy works with <b>zero signal and zero
-      data</b>. The web link needs a connection every single time you open it, which is exactly the
-      thing you cannot count on here.
-    </p>
-  </div>
-
-  <h3 class="sub">The one to install: the offline copy</h3>
-  <ol class="steps">
-    <li>Download the file <span class="said">santorini-bus-guide.html</span>. It lands in your <b>Downloads</b> folder.</li>
-    <li>Open the <b>My Files</b> app on your S25+ — Samsung's file manager, in the app drawer.</li>
-    <li>Tap <b>Downloads</b>, then tap <span class="said">santorini-bus-guide.html</span>.</li>
-    <li>If it asks which app to use, choose <b>Chrome</b>.</li>
-    <li>Tap the <span class="said">⋮</span> three dots at the top right → <b>Add to Home screen</b> → name it <span class="said">Bus</span> → <b>Add</b>.</li>
-    <li>Done. That icon now opens the full guide in airplane mode, in a dead spot, or with roaming switched off.</li>
-  </ol>
-
-  <div class="note">
-    <strong>Test it right now, before you need it</strong>
-    <p>
-      Turn on <b>airplane mode</b> and tap the icon. If the timetables, the clock and the calculator
-      all still work, you are set. If you get Chrome's dinosaur, you installed the web link by
-      mistake — go back and repeat the steps starting from <b>My Files</b>.
-    </p>
-  </div>
-
-  <h3 class="sub">Why it cannot auto-update, and why that is fine</h3>
-  <p>
-    A saved file on your phone is not allowed to reach out and pull fresh data — that is a browser
-    security rule, not something that can be switched on. So there is no background sync here, and
-    any app that claims otherwise for Santorini buses is reading the same seasonal sheet you already
-    have.
-  </p>
-  <p>
-    That sheet is the point. KTEL publishes a timetable revision that stands for the whole season —
-    the one in this guide is dated <strong>14 July 2026</strong> and covers your entire August trip.
-    There is no live bus tracking on this island to miss out on.
-  </p>
-
-  <div class="note">
-    <strong>If you want to refresh it anyway</strong>
-    <p>
-      Next time you are on decent hotel wifi, open the web link, re-download the file, and let it
-      overwrite the old one. Your home-screen icon keeps working and picks up the new copy. Doing
-      this once a week is more than enough; once a trip is realistic.
-    </p>
-  </div>
-
-  <div class="note warn">
-    <strong>Two honest limitations</strong>
-    <p>
-      This is a saved web page with a home-screen icon, not a Play Store app. It cannot send
-      notifications and will not show up in your app drawer under "Apps" — it lives on the home
-      screen only.
-    </p>
-    <p>
-      And schedules still shift mid-season with ferry traffic. <b>Photograph the printed board
-      inside Fira station on day one</b> and trust that over anything on a screen, including this.
-    </p>
-  </div>
-</section>
-
-<!-- ============================================================ -->
-<footer>
-  <h3>Before you rely on any time on this page</h3>
-  <p style="max-width:44rem;">
-    Fares, departure times, the EXP and ΣΧ markings, and the Airport (10′) and Athinios (20′) run
-    times are transcribed from the <strong>official KTEL Santorini timetable sheet revised
-    14 July 2026</strong>. Other run times are derived from the published outbound/return offsets.
-    Greek island schedules are still revised in-season with ferry traffic and demand —
-    <strong>confirm anything time-critical against the printed board at Fira Central Bus Station or
-    by phone on +30 22860 25404.</strong> Currency figures use €1 = $1.1555, the rate on 9 August 2026.
-  </p>
-  <h3 style="margin-top:1.3rem;">Sources</h3>
-  <ul>
-    <li><strong>Official KTEL Santorini timetable and fare sheet, rev. 14/07/2026</strong> — the source for every departure time and every fare on this page</li>
-    <li><a href="https://santorinidave.com/greece-entry-requirements" target="_blank" rel="noopener">SantoriniDave — Greece Entry Requirements 2026 (EES / ETIAS status)</a></li>
-    <li><a href="https://discovercyclades.gr/en/blog/santorini-public-transport" target="_blank" rel="noopener">Discover Cyclades — Santorini Public Transport 2026 (payment and luggage rules)</a></li>
-    <li><a href="https://santorinidave.com/santorini-taxi-transfer" target="_blank" rel="noopener">SantoriniDave — Santorini Taxis (taxi and transfer price comparison)</a></li>
-    <li><a href="https://www.jtr-airport.gr/en/category-detailed/ctg_id-430/nd_id-1358" target="_blank" rel="noopener">Santorini National Airport (JTR) — bus service and stop location</a></li>
-    <li><a href="https://www.federalreserve.gov/releases/h10/hist/dat00_eu.htm" target="_blank" rel="noopener">U.S. Federal Reserve H.10 — EUR/USD reference rate</a></li>
-  </ul>
-</footer>
 
 </div>
 
@@ -1363,434 +246,292 @@
 (function () {
   "use strict";
 
-  /* ---------------------------------------------------------------
-     Official KTEL Santorini timetable, sheet revised 14 July 2026.
-     "out" = departures from Fira, "back" = departures toward Fira.
-     Suffix e = EXP express (skips inland villages).
-     Suffix s = ΣΧ school-days only (does not run in August).
-     --------------------------------------------------------------- */
-  var ROUTES = [
-    {
-      id: "oia", name: "Oia", fare: 2.20, min: 20, far: "Oia",
-      out: ["07:00","08:30","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00",
-            "13:30s","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00",
-            "18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30"],
-      back: ["07:20","08:50","09:50","10:20","10:50","11:20","11:50","12:20","12:50","13:20",
-             "13:50s","14:20","14:50","15:20","15:50","16:20","16:50","17:20","17:50","18:20",
-             "18:50","19:20","19:50","20:20","20:50","21:20","21:50","22:20","22:50"]
+  /* Official KTEL Santorini timetable, sheet revised 14 July 2026.
+     out  = departures from Fira      back = departures toward Fira
+     "e" suffix = EXP express         "s" suffix = ΣΧ school-days only (skipped) */
+  var R = {
+    oia: {
+      name: "Oia", fare: 2.20, min: 20,
+      stop: "By the car park at the eastern entrance to the village, on the main road. 10–15 min walk from the caldera edge.",
+      out: ["07:00","08:30","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30s","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30"],
+      back:["07:20","08:50","09:50","10:20","10:50","11:20","11:50","12:20","12:50","13:20","13:50s","14:20","14:50","15:20","15:50","16:20","16:50","17:20","17:50","18:20","18:50","19:20","19:50","20:20","20:50","21:20","21:50","22:20","22:50"]
     },
-    {
-      id: "airport", name: "Airport (JTR)", fare: 2.20, min: 10, far: "the Airport",
-      out: ["06:00","07:15","08:30","09:15","10:00","11:00","12:00","13:00","14:00","15:00",
-            "16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"],
-      back: ["06:10","07:25","08:40","09:25","10:10","11:10","12:10","13:10","14:10","15:10",
-             "16:10","17:10","18:10","19:10","20:10","21:10","22:10","23:10"]
+    airport: {
+      name: "Airport (JTR)", fare: 2.20, min: 10,
+      stop: "Walk out of arrivals and turn right along the curb, between the two terminal buildings.",
+      out: ["06:00","07:15","08:30","09:15","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"],
+      back:["06:10","07:25","08:40","09:25","10:10","11:10","12:10","13:10","14:10","15:10","16:10","17:10","18:10","19:10","20:10","21:10","22:10","23:10"]
     },
-    {
-      id: "kamari", name: "Kamari", fare: 2.20, min: 15, far: "Kamari",
-      out: ["07:15","08:30","09:15","10:00","10:30","11:00","11:30","12:00","12:30","13:00",
-            "13:30s","14:00","14:30","15:00","15:30","16:00","16:20","16:40","17:00","17:20",
-            "17:40","18:00","18:20","18:40","19:00","19:20","19:40","20:00","20:30","21:00",
-            "21:30","22:00","22:30","23:00","23:30"],
-      back: ["07:30","08:45","09:30","10:15","10:45","11:15","11:45","12:15","12:45","13:15",
-             "13:45s","14:15","14:45","15:15","15:45","16:15","16:40","17:00","17:15","17:40",
-             "18:00","18:15","18:40","19:00","19:15","19:40","20:00","20:15","20:45","21:15",
-             "21:45","22:15","22:45","23:15","23:45"]
+    kamari: {
+      name: "Kamari", fare: 2.20, min: 15,
+      stop: "On the inland road at the village entrance, a short walk back from the beach promenade.",
+      out: ["07:15","08:30","09:15","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30s","14:00","14:30","15:00","15:30","16:00","16:20","16:40","17:00","17:20","17:40","18:00","18:20","18:40","19:00","19:20","19:40","20:00","20:30","21:00","21:30","22:00","22:30","23:00","23:30"],
+      back:["07:30","08:45","09:30","10:15","10:45","11:15","11:45","12:15","12:45","13:15","13:45s","14:15","14:45","15:15","15:45","16:15","16:40","17:00","17:15","17:40","18:00","18:15","18:40","19:00","19:15","19:40","20:00","20:15","20:45","21:15","21:45","22:15","22:45","23:15","23:45"]
     },
-    {
-      id: "perissa", name: "Perissa & Perivolos", fare: 2.70, min: 25, far: "Perissa",
-      out: ["07:00","08:30","09:50e","10:00","10:50e","11:00","11:50e","12:00","12:50e","13:00",
-            "13:50s","14:00","14:50e","15:00","15:50e","16:00","16:50e","17:00","17:15e","17:50e",
-            "18:00","18:15e","18:50e","19:00","19:15e","20:00","21:00","22:00","23:00","00:15"],
-      back: ["06:30","07:45","09:00","10:10e","10:45","11:10e","11:30","12:10e","12:30","13:10e",
-             "13:30","14:10e","14:45","15:10e","15:30","16:10e","16:30","17:10e","17:30","17:35e",
-             "18:10e","18:30","18:35e","19:10e","19:30","19:35e","20:30","21:30","22:30"]
+    perissa: {
+      name: "Perissa / Perivolos", fare: 2.70, min: 25,
+      stop: "Top of the main beach road, under the big black rock (Mesa Vouno).",
+      out: ["07:00","08:30","09:50e","10:00","10:50e","11:00","11:50e","12:00","12:50e","13:00","13:50s","14:00","14:50e","15:00","15:50e","16:00","16:50e","17:00","17:15e","17:50e","18:00","18:15e","18:50e","19:00","19:15e","20:00","21:00","22:00","23:00","00:15"],
+      back:["06:30","07:45","09:00","10:10e","10:45","11:10e","11:30","12:10e","12:30","13:10e","13:30","14:10e","14:45","15:10e","15:30","16:10e","16:30","17:10e","17:30","17:35e","18:10e","18:30","18:35e","19:10e","19:30","19:35e","20:30","21:30","22:30"]
     },
-    {
-      id: "akrotiri", name: "Akrotiri / Red Beach", fare: 2.20, min: 20, far: "Akrotiri",
-      out: ["08:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","14:00","15:00",
-            "16:00","17:00","18:00","19:00","20:00","21:15"],
-      back: ["08:50","10:20","10:50","11:20","11:50","12:20","12:50","13:20","14:20","15:20",
-             "16:20","17:20","18:20","19:20","20:20","21:35"]
+    akrotiri: {
+      name: "Akrotiri / Red Beach", fare: 2.20, min: 20,
+      stop: "The car park at the top of the Red Beach trail, or the village stop for the ruins.",
+      out: ["08:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:15"],
+      back:["08:50","10:20","10:50","11:20","11:50","12:20","12:50","13:20","14:20","15:20","16:20","17:20","18:20","19:20","20:20","21:35"]
     },
-    {
-      id: "firo", name: "Firostefani & Imerovigli", fare: 2.20, min: 5, far: "Imerovigli",
-      out: ["08:30","09:15","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00",
-            "18:00","19:00","20:00","21:00","22:00"],
-      back: ["08:35","09:20","10:05","11:05","12:05","13:05","14:05","15:05","16:05","17:05",
-             "18:05","19:05","20:05","21:05","22:05"]
+    firo: {
+      name: "Firostefani / Imerovigli", fare: 2.20, min: 5,
+      stop: "Roadside pullout on the inland road, above the caldera hotels.",
+      out: ["08:30","09:15","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00"],
+      back:["08:35","09:20","10:05","11:05","12:05","13:05","14:05","15:05","16:05","17:05","18:05","19:05","20:05","21:05","22:05"]
     },
-    {
-      id: "monolithos", name: "Monolithos", fare: 2.20, min: 10, far: "Monolithos",
+    monolithos: {
+      name: "Monolithos", fare: 2.20, min: 10,
+      stop: "On the beach road just north of the airport runway.",
       out: ["07:15","10:00","12:00","14:00","17:00","19:00","21:00"],
-      back: ["07:25","10:10","12:10","14:10","17:10","19:10","21:10"]
+      back:["07:25","10:10","12:10","14:10","17:10","19:10","21:10"]
     },
-    {
-      id: "vlychada", name: "Vlychada", fare: 2.70, min: 30, far: "Vlychada",
+    vlychada: {
+      name: "Vlychada", fare: 2.70, min: 30,
+      stop: "By the marina, near the Tomato Industrial Museum.",
       out: ["07:00","10:00","14:00","17:00"],
-      back: ["07:30","10:30","14:30","17:30"]
+      back:["07:30","10:30","14:30","17:30"]
     },
-    {
-      id: "vourvoulos", name: "Vourvoulos", fare: 2.20, min: 10, far: "Vourvoulos",
+    vourvoulos: {
+      name: "Vourvoulos", fare: 2.20, min: 10,
+      stop: "Village stop on the inland road north of Fira.",
       out: ["14:00"],
-      back: ["07:40","14:10"]
+      back:["07:40","14:10"]
+    },
+    athinios: {
+      name: "Athinios Ferry Port", fare: 2.70, min: 20, noTimetable: true,
+      stop: "On the quay, straight ahead as you walk off the ferry ramp.",
+      out: [], back: []
     }
-  ];
+  };
 
-  /* Destinations for the cost calculator. Villages served as intermediate
-     stops carry the fare of the run they sit on. */
-  var PLACES = [
-    { id: "fira",        name: "Fira (hub)",              fare: 0,    min: 0  },
-    { id: "firostefani", name: "Firostefani",             fare: 2.20, min: 5  },
-    { id: "imerovigli",  name: "Imerovigli",              fare: 2.20, min: 8  },
-    { id: "oia",         name: "Oia",                     fare: 2.20, min: 20 },
-    { id: "baxedes",     name: "Baxedes",                 fare: 2.20, min: 30 },
-    { id: "airport",     name: "Santorini Airport (JTR)", fare: 2.20, min: 10 },
-    { id: "athinios",    name: "Athinios Ferry Port",     fare: 2.70, min: 20 },
-    { id: "kamari",      name: "Kamari",                  fare: 2.20, min: 15 },
-    { id: "perissa",     name: "Perissa",                 fare: 2.70, min: 25 },
-    { id: "perivolos",   name: "Perivolos",               fare: 2.70, min: 27 },
-    { id: "akrotiri",    name: "Akrotiri / Red Beach",    fare: 2.20, min: 20 },
-    { id: "vlychada",    name: "Vlychada",                fare: 2.70, min: 30 },
-    { id: "monolithos",  name: "Monolithos",              fare: 2.20, min: 10 },
-    { id: "pyrgos",      name: "Pyrgos",                  fare: 2.20, min: 15 },
-    { id: "megalochori", name: "Megalochori",             fare: 2.20, min: 20 },
-    { id: "emporio",     name: "Emporio",                 fare: 2.20, min: 22 },
-    { id: "messaria",    name: "Messaria",                fare: 2.20, min: 8  },
-    { id: "karterados",  name: "Karterados",              fare: 2.20, min: 5  },
-    { id: "vothonas",    name: "Vothonas",                fare: 2.20, min: 10 },
-    { id: "vourvoulos",  name: "Vourvoulos",              fare: 2.20, min: 10 }
-  ];
+  var FIRA_STOP = "Fira Central Bus Station — the open paved lot two blocks south of the main square, on 25is Martiou.";
+  var ORDER = ["fira","oia","airport","kamari","perissa","akrotiri","firo","monolithos","vlychada","vourvoulos","athinios"];
+  var CHANGE = 5;      // minutes to walk between bays at Fira
+  var RATE = 1.1555;   // USD per EUR, 9 Aug 2026
 
-  var TRANSFER_WAIT = 20; // typical August wait at Fira between connecting spokes
-
-  /* ---------------- time helpers ---------------- */
-
-  function parse(t) {                       // "13:50s" -> {mins, exp, sch, label}
-    var exp = t.indexOf("e") > -1;
-    var sch = t.indexOf("s") > -1;
-    var hhmm = t.replace(/[es]/g, "");
-    var bits = hhmm.split(":");
-    return {
-      mins: parseInt(bits[0], 10) * 60 + parseInt(bits[1], 10),
-      exp: exp, sch: sch, label: hhmm
-    };
+  /* ---------- helpers ---------- */
+  function parse(t) {
+    var exp = t.indexOf("e") > -1, sch = t.indexOf("s") > -1;
+    var hhmm = t.replace(/[es]/g, ""), p = hhmm.split(":");
+    return { m: (+p[0]) * 60 + (+p[1]), exp: exp, sch: sch, label: hhmm };
   }
-
-  /* Current wall-clock minutes in Santorini, regardless of device timezone. */
-  function santoriniNow() {
-    try {
-      var parts = new Intl.DateTimeFormat("en-GB", {
-        timeZone: "Europe/Athens", hour: "2-digit", minute: "2-digit", hour12: false
-      }).formatToParts(new Date());
-      var h = 0, m = 0;
-      parts.forEach(function (p) {
-        if (p.type === "hour") h = parseInt(p.value, 10);
-        if (p.type === "minute") m = parseInt(p.value, 10);
-      });
-      return { mins: h * 60 + m, label: pad(h) + ":" + pad(m), ok: true };
-    } catch (e) {
-      var d = new Date();
-      return { mins: d.getHours() * 60 + d.getMinutes(), label: pad(d.getHours()) + ":" + pad(d.getMinutes()), ok: false };
-    }
-  }
-
+  function times(list) { return list.map(parse).filter(function (t) { return !t.sch; }); }
   function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function clockOf(m) { m = ((m % 1440) + 1440) % 1440; return pad(Math.floor(m / 60)) + ":" + pad(m % 60); }
   function eur(n) { return "€" + n.toFixed(2); }
-  function usd(n) { return "$" + n.toFixed(2); }
-  function dur(m) { var h = Math.floor(m / 60), r = m % 60; return h ? h + "h " + r + "m" : r + "m"; }
-
-  /* ---------------- next-bus board ---------------- */
-
-  var elBoard = {
-    sel: document.getElementById("rt-sel"),
-    out: document.getElementById("dir-out"),
-    back: document.getElementById("dir-back"),
-    hero: document.getElementById("next-hero"),
-    upcoming: document.getElementById("upcoming"),
-    lastbus: document.getElementById("lastbus"),
-    foot: document.getElementById("board-foot"),
-    clock: document.getElementById("clock")
-  };
-
-  var dir = "out";
-
-  ROUTES.forEach(function (r) {
-    var o = document.createElement("option");
-    o.value = r.id;
-    o.textContent = r.name;
-    elBoard.sel.appendChild(o);
-  });
-  elBoard.sel.value = "oia";
-
-  function routeById(id) {
-    for (var i = 0; i < ROUTES.length; i++) { if (ROUTES[i].id === id) return ROUTES[i]; }
-    return ROUTES[0];
+  function dur(m) {
+    if (m < 60) return m + " min";
+    var h = Math.floor(m / 60), r = m % 60;
+    return r ? h + " hr " + r + " min" : h + " hr";
   }
-
-  function renderBoard() {
-    var r = routeById(elBoard.sel.value);
-    var now = santoriniNow();
-    var list = (dir === "out" ? r.out : r.back).map(parse).filter(function (t) { return !t.sch; });
-    var from = dir === "out" ? "Fira" : r.far;
-    var to = dir === "out" ? r.far : "Fira";
-
-    elBoard.clock.innerHTML = "Santorini time <b>" + now.label + "</b>";
-
-    var upcoming = list.filter(function (t) { return t.mins >= now.mins; });
-
-    elBoard.hero.className = "next-hero";
-    if (upcoming.length) {
-      var n = upcoming[0];
-      var wait = n.mins - now.mins;
-      elBoard.hero.innerHTML =
-        '<span class="t">' + n.label + "</span>" +
-        '<span class="in">' + (wait === 0 ? "leaving now" : "in " + dur(wait)) + "</span>" +
-        '<span class="meta">' + from + " → " + to + " · " + r.min + " min ride · " + eur(r.fare) +
-        (n.exp ? " · EXP express, skips the inland villages" : "") + "</span>";
-    } else {
-      var first = list[0];
-      elBoard.hero.className = "next-hero closed";
-      elBoard.hero.innerHTML =
-        '<span class="t">' + (first ? first.label : "—") + "</span>" +
-        '<span class="in">tomorrow</span>' +
-        '<span class="meta">Done for today on this route. First bus ' + from + " → " + to +
-        " is " + (first ? first.label : "not scheduled") + ". Tonight you are walking or paying for a taxi.</span>";
-    }
-
-    elBoard.upcoming.innerHTML = "";
-    upcoming.slice(1, 9).forEach(function (t) {
-      var s = document.createElement("span");
-      if (t.exp) s.className = "exp";
-      s.textContent = t.label + (t.exp ? " EXP" : "");
-      elBoard.upcoming.appendChild(s);
-    });
-
-    /* Last bus back to Fira — always shown, whichever direction is selected,
-       because this is the number that decides whether you are paying for a taxi. */
-    var homeward = r.back.map(parse).filter(function (t) { return !t.sch; });
-    var last = homeward[homeward.length - 1];
-    if (last) {
-      var left = last.mins - now.mins;
-      var first = homeward[0];
-      var cls, headline, why;
-      if (left < 0) {
-        cls = "gone";
-        headline = "gone";
-        why = "The last bus from " + r.far + " to Fira left at " + last.label +
-              ". You are walking or paying for a taxi tonight. Santorini runs about 30 taxis for the whole island — call the Fira rank on +30 22860 22555 rather than waiting hopefully at the stop.";
-      } else if (now.mins < 300) {
-        /* Small hours: nothing has run yet today, so a countdown to tonight's
-           last bus is a misleading thing to put in front of someone. */
-        cls = "gone";
-        headline = "service has not started";
-        why = "It is the middle of the night. Nothing runs on this route until " +
-              (first ? first.label : "morning") + ", and today's last bus back from " + r.far +
-              " will be " + last.label + ". Until then it is a taxi — Fira rank, +30 22860 22555.";
-      } else if (left <= 60) {
-        cls = "soon";
-        headline = "in " + dur(left);
-        why = "Last bus from " + r.far + " to Fira. Head for the stop now — in August a full bus will drive past you, and there is no second chance on this one.";
-      } else {
-        cls = "ok";
-        headline = "in " + dur(left);
-        why = "Last bus from " + r.far + " to Fira. Plenty of time, but be at the stop 15 minutes early if you are travelling in peak season.";
-      }
-      elBoard.lastbus.className = "lastbus " + cls;
-      elBoard.lastbus.innerHTML =
-        '<span class="k">Last bus home from ' + r.far + "</span>" +
-        '<span class="t">' + last.label + "</span>" +
-        '<span class="in">' + headline + "</span>" +
-        '<span class="why">' + why + "</span>";
-    } else {
-      elBoard.lastbus.className = "lastbus";
-      elBoard.lastbus.innerHTML = "";
-    }
-
-    var notes = [];
-    notes.push(list.length + " departures a day on this direction.");
-    if (!now.ok) notes.push("Could not read the Athens time zone on this device — showing your local clock instead.");
-    else notes.push("Clock is Santorini local time (EEST, UTC+3), not your phone's home time zone.");
-    notes.push("ΣΧ school-day departures are excluded; they do not run in August.");
-    elBoard.foot.textContent = notes.join(" ");
+  function nowSantorini() {
+    try {
+      var parts = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Athens", hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(new Date());
+      var h = 0, mi = 0;
+      parts.forEach(function (p) { if (p.type === "hour") h = +p.value; if (p.type === "minute") mi = +p.value; });
+      return h * 60 + mi;
+    } catch (e) { var d = new Date(); return d.getHours() * 60 + d.getMinutes(); }
   }
-
-  function setDir(d) {
-    dir = d;
-    elBoard.out.setAttribute("aria-pressed", d === "out" ? "true" : "false");
-    elBoard.back.setAttribute("aria-pressed", d === "back" ? "true" : "false");
-    renderBoard();
+  function nextAfter(list, m) {
+    for (var i = 0; i < list.length; i++) { if (list[i].m >= m) return list[i]; }
+    return null;
   }
+  function label(id) { return id === "fira" ? "Fira" : R[id].name; }
+  function stopOf(id) { return id === "fira" ? FIRA_STOP : R[id].stop; }
 
-  elBoard.sel.addEventListener("change", renderBoard);
-  elBoard.out.addEventListener("click", function () { setDir("out"); });
-  elBoard.back.addEventListener("click", function () { setDir("back"); });
-  setInterval(renderBoard, 30000);
-
-  /* ---------------- full timetables ---------------- */
-
-  function timesHTML(arr) {
-    return arr.map(function (raw) {
-      var t = parse(raw);
-      var cls = t.sch ? "sch" : (t.exp ? "exp" : "");
-      return '<span class="' + cls + '">' + t.label + (t.exp ? " EXP" : "") + (t.sch ? " ΣΧ" : "") + "</span>";
-    }).join("");
-  }
-
-  var ttWrap = document.getElementById("timetables");
-  ROUTES.forEach(function (r, i) {
-    var d = document.createElement("details");
-    d.className = "tt";
-    if (i === 0) d.open = true;
-    d.innerHTML =
-      "<summary><span class='tt-name'>" + r.name + "</span>" +
-      "<span class='tt-meta'>" + eur(r.fare) + " · " + r.min + " min · " +
-      r.out.length + " out / " + r.back.length + " back</span></summary>" +
-      "<div class='tt-body'>" +
-        "<div class='tt-col'><h4>From Fira → " + r.far + "</h4>" +
-          "<div class='tt-times'>" + timesHTML(r.out) + "</div></div>" +
-        "<div class='tt-col'><h4>From " + r.far + " → Fira</h4>" +
-          "<div class='tt-times'>" + timesHTML(r.back) + "</div></div>" +
-      "</div>";
-    ttWrap.appendChild(d);
-  });
-
-  var portNote = document.createElement("details");
-  portNote.className = "tt";
-  portNote.innerHTML =
-    "<summary><span class='tt-name'>Athinios Ferry Port</span>" +
-    "<span class='tt-meta'>€2.70 · 20 min · no fixed timetable</span></summary>" +
-    "<div class='tt-body'><div class='tt-col' style='grid-column:1/-1'>" +
-    "<p style='margin:0;font-size:.9rem;max-width:none;'>KTEL publishes no clock timetable for the port. " +
-    "Departures are scheduled against the ferry manifest and change daily. Buses meet arriving boats on the quay, " +
-    "and outbound services leave Fira timed to sailings. <strong>Ask at the Fira station booth the day before " +
-    "your ferry</strong> — this is the one route you cannot plan from a printed sheet.</p>" +
-    "</div></div>";
-  ttWrap.appendChild(portNote);
-
-  /* ---------------- cost calculator ---------------- */
-
-  var el = {
-    from: document.getElementById("from"),
-    to: document.getElementById("to"),
-    pax: document.getElementById("pax"),
-    kids: document.getElementById("kids"),
-    rate: document.getElementById("rate"),
-    rt: document.getElementById("rt"),
-    legs: document.getElementById("legs"),
-    totals: document.getElementById("totals"),
-    footnote: document.getElementById("footnote")
-  };
-
-  PLACES.forEach(function (p) {
-    [el.from, el.to].forEach(function (sel) {
+  /* ---------- build pickers ---------- */
+  var elFrom = document.getElementById("from"), elTo = document.getElementById("to");
+  ORDER.forEach(function (id) {
+    [elFrom, elTo].forEach(function (sel) {
       var o = document.createElement("option");
-      o.value = p.id;
-      o.textContent = p.name;
+      o.value = id; o.textContent = label(id);
       sel.appendChild(o);
     });
   });
-  el.from.value = "airport";
-  el.to.value = "oia";
+  elFrom.value = "fira";
+  elTo.value = "oia";
 
-  function place(id) {
-    for (var i = 0; i < PLACES.length; i++) { if (PLACES[i].id === id) return PLACES[i]; }
-    return null;
+  /* ---------- plan a trip ---------- */
+  function plan(from, to, now) {
+    /* one leg: Fira at one end */
+    if (from === "fira" || to === "fira") {
+      var other = from === "fira" ? to : from;
+      var r = R[other];
+      if (r.noTimetable) return { port: true, other: other, fare: r.fare };
+      var list = times(from === "fira" ? r.out : r.back);
+      var dep = nextAfter(list, now);
+      var tomorrow = !dep;
+      if (!dep) dep = list[0];
+      if (!dep) return null;
+      return {
+        legs: [{ dep: dep, from: from, to: to, route: other, ride: r.min, fare: r.fare }],
+        fare: r.fare, dep: dep, tomorrow: tomorrow,
+        arrive: dep.m + r.min
+      };
+    }
+
+    /* two legs: change at Fira */
+    var ra = R[from], rb = R[to];
+    if (ra.noTimetable || rb.noTimetable) {
+      return { port: true, other: ra.noTimetable ? from : to, fare: ra.fare + rb.fare, viaFira: true };
+    }
+    var listA = times(ra.back), listB = times(rb.out);
+    var dep1 = nextAfter(listA, now), tomorrow = false;
+    if (!dep1) { dep1 = listA[0]; tomorrow = true; }
+    if (!dep1) return null;
+    var atFira = dep1.m + ra.min;
+    var dep2 = nextAfter(listB, atFira + CHANGE);
+    if (!dep2) { dep2 = listB[0]; }
+    return {
+      legs: [
+        { dep: dep1, from: from, to: "fira", route: from, ride: ra.min, fare: ra.fare },
+        { dep: dep2, from: "fira", to: to, route: to, ride: rb.min, fare: rb.fare }
+      ],
+      fare: ra.fare + rb.fare, dep: dep1, tomorrow: tomorrow,
+      atFira: atFira, wait: dep2.m >= atFira ? dep2.m - atFira : null,
+      arrive: dep2.m + rb.min
+    };
   }
 
-  /* Hub-and-spoke routing: direct if one end is Fira, otherwise change at Fira. */
-  function route(a, b) {
-    if (a.id === "fira") return [{ from: a, to: b, spoke: b }];
-    if (b.id === "fira") return [{ from: a, to: b, spoke: a }];
-    return [
-      { from: a, to: place("fira"), spoke: a },
-      { from: place("fira"), to: b, spoke: b }
-    ];
-  }
+  /* ---------- render ---------- */
+  var elAnswer = document.getElementById("answer"),
+      elLast = document.getElementById("lastbus"),
+      elLater = document.getElementById("later"),
+      elNow = document.getElementById("now");
 
-  function renderCalc() {
-    var a = place(el.from.value);
-    var b = place(el.to.value);
-    var adults = Math.max(1, parseInt(el.pax.value, 10) || 1);
-    var kids = Math.max(0, parseInt(el.kids.value, 10) || 0);
-    var rate = parseFloat(el.rate.value) || 1.1555;
-    var roundTrip = el.rt.checked;
+  function render() {
+    var from = elFrom.value, to = elTo.value, now = nowSantorini();
+    elNow.textContent = clockOf(now);
 
-    el.legs.innerHTML = "";
-    el.totals.innerHTML = "";
-
-    if (a.id === b.id) {
-      el.legs.innerHTML = '<p class="calc-err">Pick two different places — that trip is a walk.</p>';
-      el.footnote.textContent = "";
+    if (from === to) {
+      elAnswer.innerHTML = '<div class="leave bad"><div class="lbl">Hmm</div>' +
+        '<div class="big"><span class="cd">You\'re already there.</span></div>' +
+        '<div class="arrive">Pick a different destination.</div></div>';
+      elLast.innerHTML = ""; elLater.innerHTML = "";
       return;
     }
 
-    var legs = route(a, b);
-    var fareOneWay = 0, minsOneWay = 0, n = 0;
-    var frag = document.createDocumentFragment();
+    var p = plan(from, to, now);
 
-    legs.forEach(function (leg, i) {
+    if (p && p.port) {
+      elAnswer.innerHTML =
+        '<div class="leave"><div class="lbl">Ferry port — no fixed timetable</div>' +
+        '<div class="big"><span class="cd">Buses meet the boats</span></div>' +
+        '<div class="arrive">KTEL schedules the port run against the ferry list, so it changes daily.</div></div>' +
+        '<ul class="steps"><li><span class="dot">?</span><span><span class="step-main">Ask at Fira bus station</span>' +
+        '<span class="step-sub">Tell them your sailing time and they will tell you which bus to take. ' +
+        'Go <b>90 minutes early</b> — the cliff road jams when a ferry unloads.</span></span></li></ul>' +
+        '<div class="cost"><span class="amt">' + eur(p.fare) + '</span>' +
+        '<span class="side"><b>per person, cash</b><br>' + (p.viaFira ? "two tickets — you change at Fira" : "one ticket") + '</span></div>';
+      elLast.innerHTML = ""; elLater.innerHTML = "";
+      return;
+    }
+
+    if (!p) { elAnswer.innerHTML = ""; elLast.innerHTML = ""; elLater.innerHTML = ""; return; }
+
+    /* headline */
+    var wait = p.dep.m - now;
+    var head;
+    if (p.tomorrow) {
+      head = '<div class="leave bad"><div class="lbl">No more buses today</div>' +
+             '<div class="big"><span class="t">' + p.dep.label + '</span><span class="cd">tomorrow morning</span></div>' +
+             '<div class="arrive">Tonight you need a taxi — Fira rank <b>+30 22860 22555</b>.</div></div>';
+    } else {
+      head = '<div class="leave"><div class="lbl">Catch the bus at</div>' +
+             '<div class="big"><span class="t">' + p.dep.label + '</span><span class="cd">' +
+             (wait <= 0 ? "right now" : "in " + dur(wait)) + '</span></div>' +
+             '<div class="arrive">Arrive about <b>' + clockOf(p.arrive) + '</b> · ' +
+             dur(p.arrive - p.dep.m) + ' door to door</div></div>';
+    }
+
+    /* steps */
+    var steps = "", n = 0;
+    p.legs.forEach(function (leg, i) {
       if (i > 0) {
-        var t = document.createElement("div");
-        t.className = "leg transfer";
-        t.innerHTML =
-          '<span class="leg-n">⇄</span>' +
-          '<span class="leg-body"><span class="leg-name">Change buses at Fira</span>' +
-          '<span class="leg-meta"> — walk to the next bay and pay again. Allow ~' + TRANSFER_WAIT + " min.</span></span>" +
-          '<span class="leg-fare">+' + TRANSFER_WAIT + "m</span>";
-        frag.appendChild(t);
-        minsOneWay += TRANSFER_WAIT;
+        n++;
+        steps += '<li><span class="dot pay">' + n + '</span><span>' +
+          '<span class="step-main">Get off at Fira and buy a second ticket</span>' +
+          '<span class="step-sub">You arrive about <b>' + clockOf(p.atFira) + '</b>. Walk to the ' +
+          label(p.legs[1].route) + ' bay' +
+          (p.wait !== null ? ' and wait <b>' + dur(p.wait) + '</b>' : '') +
+          '. Ask an attendant if you can\'t spot it.</span></span></li>';
       }
-      n += 1;
-      fareOneWay += leg.spoke.fare;
-      minsOneWay += leg.spoke.min;
-
-      var d = document.createElement("div");
-      d.className = "leg";
-      d.innerHTML =
-        '<span class="leg-n">' + n + "</span>" +
-        '<span class="leg-body"><span class="leg-name">' + leg.from.name + " → " + leg.to.name + "</span>" +
-        '<span class="leg-meta"> — ' + leg.spoke.min + " min on the bus</span></span>" +
-        '<span class="leg-fare">' + eur(leg.spoke.fare) + "</span>";
-      frag.appendChild(d);
+      n++;
+      steps += '<li><span class="dot">' + n + '</span><span>' +
+        '<span class="step-main">' + (i === 0 ? "Take the " : "Then take the ") +
+        '<b>' + label(leg.route) + '</b> bus at ' + leg.dep.label + '</span>' +
+        '<span class="step-sub">' +
+        (i === 0 ? "Wait at: " + stopOf(leg.from) + " " : "") +
+        (leg.dep.exp ? "This one is marked <b>EXP</b> — it skips the inland villages. " : "") +
+        "Ride " + dur(leg.ride) + ", pay <b>" + eur(leg.fare) + "</b> on board." +
+        '</span></span></li>';
     });
 
-    el.legs.appendChild(frag);
+    var ticketNote = p.legs.length > 1 ? "two tickets each way" : "one ticket";
+    var costBlock = '<div class="cost"><span class="amt">' + eur(p.fare) + '</span>' +
+      '<span class="side"><b>per person, one way</b><br>' + ticketNote +
+      ' · about $' + (p.fare * RATE).toFixed(2) + '</span></div>';
 
-    var trips = roundTrip ? 2 : 1;
-    var perAdult = fareOneWay * trips;
-    var perKid = perAdult / 2;                       // ages 7–12 travel at half fare
-    var total = perAdult * adults + perKid * kids;
-    var totalMins = minsOneWay * trips;
+    elAnswer.innerHTML = head + '<ul class="steps">' + steps + '</ul>' + costBlock;
 
-    [
-      { k: "Total cash needed", v: eur(total), sub: "≈ " + usd(total * rate), hero: true },
-      { k: "Per adult", v: eur(perAdult), sub: roundTrip ? "round trip" : "one way" },
-      { k: "Tickets to buy", v: String(legs.length * trips * (adults + kids)),
-        sub: legs.length > 1 ? "two per person, each direction" : "one per person, each direction" },
-      { k: roundTrip ? "Time, both ways" : "Time, one way", v: dur(totalMins), sub: "riding + transfer, not queueing" }
-    ].forEach(function (c) {
-      var d = document.createElement("div");
-      d.className = "total-cell" + (c.hero ? " hero" : "");
-      d.innerHTML = '<span class="k">' + c.k + '</span><span class="v">' + c.v + "</span>" +
-                    '<div class="sub">' + c.sub + "</div>";
-      el.totals.appendChild(d);
-    });
+    /* Last bus home: the question is always "can I get back from where I'm
+       heading?", so this tracks the destination — except when the destination
+       is Fira, where the relevant service is the one leaving where you are. */
+    var homeId = to === "fira" ? from : to;
+    var homeR = R[homeId];
+    if (homeR && !homeR.noTimetable) {
+      var homeList = times(homeR.back);
+      var last = homeList[homeList.length - 1];
+      var left = last.m - now, cls, cd, why;
+      if (now < 300) {
+        cls = "gone"; cd = "not running yet";
+        why = "It's the middle of the night. Nothing runs from " + homeR.name +
+              " until " + homeList[0].label + ". Taxi: +30 22860 22555.";
+      } else if (left < 0) {
+        cls = "gone"; cd = "already gone";
+        why = "The last bus back to Fira left at " + last.label +
+              ". Call the Fira taxi rank on +30 22860 22555 — there are only about 30 taxis on the island.";
+      } else if (left <= 60) {
+        cls = "soon"; cd = "in " + dur(left);
+        why = "Head for the stop now. In August a full bus will drive straight past you, and there is no second chance.";
+      } else {
+        cls = "ok"; cd = "in " + dur(left);
+        why = "Plenty of time. Be at the stop 15 minutes early in peak season.";
+      }
+      elLast.innerHTML = '<div class="lastbus ' + cls + '">' +
+        '<div class="lbl">Last bus back to Fira from ' + homeR.name + '</div>' +
+        '<div class="row"><span class="t">' + last.label + '</span><span class="cd">' + cd + '</span></div>' +
+        '<div class="why">' + why + '</div></div>';
+    } else {
+      elLast.innerHTML = "";
+    }
 
-    var notes = [];
-    if (kids > 0) notes.push("Children 7–12 pay half fare; under 7 ride free and are not counted.");
-    if (legs.length > 1) notes.push("No direct bus links " + a.name + " and " + b.name + " — the hub rule applies.");
-    notes.push("Add queueing time on the Oia and airport spokes in August; a full bus will pass you.");
-    el.footnote.textContent = notes.join(" ");
+    /* later departures on the first leg */
+    var firstRoute = R[p.legs[0].route];
+    var firstList = times(from === "fira" ? firstRoute.out : firstRoute.back);
+    var upcoming = firstList.filter(function (t) { return t.m > p.dep.m; }).slice(0, 8);
+    if (upcoming.length && !p.tomorrow) {
+      elLater.innerHTML = '<div class="lbl">Later buses from ' + label(from) + '</div><div class="chips">' +
+        upcoming.map(function (t) { return "<span>" + t.label + (t.exp ? " EXP" : "") + "</span>"; }).join("") +
+        "</div>";
+    } else {
+      elLater.innerHTML = "";
+    }
   }
 
-  ["change", "input"].forEach(function (evt) {
-    [el.from, el.to, el.pax, el.kids, el.rate, el.rt].forEach(function (node) {
-      node.addEventListener(evt, renderCalc);
-    });
+  document.getElementById("swap").addEventListener("click", function () {
+    var a = elFrom.value; elFrom.value = elTo.value; elTo.value = a; render();
   });
-
-  renderBoard();
-  renderCalc();
+  elFrom.addEventListener("change", render);
+  elTo.addEventListener("change", render);
+  setInterval(render, 30000);
+  render();
 })();
 </script>
