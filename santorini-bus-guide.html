@@ -128,6 +128,25 @@
   .leave .cd { font-size: 1.05rem; font-weight: 700; color: var(--accent-ink); }
   .leave .arrive { font-size: .92rem; color: var(--ink-2); margin-top: .35rem; }
 
+  /* Journey summary: get on at X / get to Y at Z, as two labelled rows. */
+  .jrow { display: grid; grid-template-columns: auto 1fr; gap: 0 .7rem; align-items: baseline; }
+  .jlbl {
+    grid-column: 1 / -1; font-size: .68rem; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent-ink); opacity: .75; margin-bottom: .1rem;
+  }
+  .jtime {
+    font-family: var(--data); font-variant-numeric: tabular-nums;
+    font-size: 2.5rem; font-weight: 700; letter-spacing: -.045em; line-height: 1;
+    color: var(--accent-ink);
+  }
+  .jtime.alt { font-size: 1.9rem; opacity: .92; }
+  .jnote { font-size: .88rem; font-weight: 600; color: var(--accent-ink); opacity: .85; }
+  .jrow + .jrow {
+    margin-top: .7rem; padding-top: .7rem;
+    border-top: 1px dashed currentColor; border-color: var(--accent);
+  }
+  .jrow + .jrow .jlbl { opacity: .6; }
+
   .leave.bad { background: var(--oxide-soft); }
   .leave.bad .lbl, .leave.bad .t, .leave.bad .cd { color: var(--oxide); }
 
@@ -453,11 +472,22 @@
              '<div class="big"><span class="t">' + p.dep.label + '</span><span class="cd">tomorrow morning</span></div>' +
              '<div class="arrive">Tonight you need a taxi \u2014 Fira rank <b>+30 22860 22555</b>.</div></div>';
     } else {
-      head = '<div class="leave"><div class="lbl">Catch the bus at</div>' +
-             '<div class="big"><span class="t">' + p.dep.label + '</span><span class="cd">' +
-             (wait <= 0 ? "right now" : "in " + dur(wait)) + '</span></div>' +
-             '<div class="arrive">Arrive about <b>' + clockOf(p.arrive) + '</b> \u00B7 ' +
-             dur(p.arrive - p.dep.m) + ' door to door</div></div>';
+      /* Two explicit rows \u2014 get on at X, get to Y at Z \u2014 because a single
+         "arrive" line reads as if it were another departure time. */
+      var buses = p.legs.length === 1 ? "1 bus" : p.legs.length + " buses";
+      head = '<div class="leave">' +
+             '<div class="jrow">' +
+               '<div class="jlbl">Get on the bus at</div>' +
+               '<div class="jtime">' + p.dep.label + '</div>' +
+               '<div class="jnote">' + (wait <= 0 ? "right now" : "in " + dur(wait)) +
+               ' \u00B7 at ' + label(from) + '</div>' +
+             '</div>' +
+             '<div class="jrow">' +
+               '<div class="jlbl">Get to ' + label(to) + ' at</div>' +
+               '<div class="jtime alt">' + clockOf(p.arrive) + '</div>' +
+               '<div class="jnote">' + dur(p.arrive - p.dep.m) + ' total \u00B7 ' + buses + '</div>' +
+             '</div>' +
+             '</div>';
     }
 
     /* steps */
@@ -467,7 +497,7 @@
         n++;
         steps += '<li><span class="dot pay">' + n + '</span><span>' +
           '<span class="step-main">Get off at Fira and buy a second ticket</span>' +
-          '<span class="step-sub">You arrive about <b>' + clockOf(p.atFira) + '</b>. Walk to the ' +
+          '<span class="step-sub">You reach Fira about <b>' + clockOf(p.atFira) + '</b>. Walk to the ' +
           label(p.legs[1].route) + ' bay' +
           (p.wait !== null ? ' and wait <b>' + dur(p.wait) + '</b>' : '') +
           '. Ask an attendant if you can\'t spot it.</span></span></li>';
@@ -480,10 +510,13 @@
         (i === 0 ? "Wait at: " + stopOf(leg.from) + " " : "") +
         (leg.dep.exp ? "This one is marked <b>EXP</b> \u2014 it skips the inland villages. " : "") +
         "Ride " + dur(leg.ride) + ", pay <b>" + eur(leg.fare) + "</b> on board." +
+        (i === p.legs.length - 1
+          ? " Puts you in " + label(to) + " about <b>" + clockOf(p.arrive) + "</b>."
+          : "") +
         '</span></span></li>';
     });
 
-    var ticketNote = p.legs.length > 1 ? "two tickets each way" : "one ticket";
+    var ticketNote = p.legs.length > 1 ? "two tickets (one per bus)" : "one ticket";
     var costBlock = '<div class="cost"><span class="amt">' + eur(p.fare) + '</span>' +
       '<span class="side"><b>per person, one way</b><br>' + ticketNote +
       ' \u00B7 about $' + (p.fare * RATE).toFixed(2) + '</span></div>';
