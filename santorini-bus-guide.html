@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Santorini Bus</title>
 <style>
   :root {
@@ -103,8 +105,9 @@
     width: 2.5rem; height: 2.5rem; border-radius: 50%;
     background: var(--accent); color: var(--ground);
     border: 3px solid var(--ground); cursor: pointer;
-    font-size: 1.1rem; line-height: 1; display: grid; place-items: center; z-index: 2;
+    display: grid; place-items: center; z-index: 2; padding: 0;
   }
+  .swap svg { width: 1.15rem; height: 1.15rem; display: block; }
   .swap:active { transform: translateY(-50%) scale(.93); }
 
   /* ---------- answer ---------- */
@@ -183,8 +186,8 @@
     font-size: .93rem; font-weight: 700; display: flex; align-items: center;
   }
   details.nk > summary::-webkit-details-marker { display: none; }
-  details.nk > summary::after { content: "▸"; margin-left: auto; color: var(--ink-3); }
-  details.nk[open] > summary::after { content: "▾"; }
+  details.nk > summary::after { content: "\0025B8"; margin-left: auto; color: var(--ink-3); }
+  details.nk[open] > summary::after { content: "\0025BE"; }
   details.nk[open] > summary { border-bottom: 1px solid var(--rule); }
   .nk-body { padding: .3rem 0; }
   .nk-item { padding: .7rem .95rem; font-size: .9rem; color: var(--ink-2); line-height: 1.45; }
@@ -204,7 +207,7 @@
 
   <div class="top">
     <h1>Santorini <span>Bus</span></h1>
-    <span class="now" id="now">—:—</span>
+    <span class="now" id="now">&#x2014;:&#x2014;</span>
   </div>
 
   <div class="pickers">
@@ -212,7 +215,13 @@
       <label for="from">I'm at</label>
       <select id="from"></select>
     </div>
-    <button class="swap" id="swap" type="button" title="Swap" aria-label="Swap start and destination">⇅</button>
+    <button class="swap" id="swap" type="button" title="Swap" aria-label="Swap start and destination">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M8 3v18M8 3L4 7M8 3l4 4"/>
+        <path d="M16 21V3M16 21l-4-4M16 21l4-4"/>
+      </svg>
+    </button>
     <div class="pick">
       <label for="to">Going to</label>
       <select id="to"></select>
@@ -229,7 +238,7 @@
       <div class="nk-item"><b>Cash only.</b> A conductor comes down the aisle and takes euros. No cards, no Apple Pay. Keep small notes and coins.</div>
       <div class="nk-item"><b>Buy a ticket on each bus.</b> If you change buses, you pay twice. There are no day passes or transfers.</div>
       <div class="nk-item"><b>Look for the town name, not a number.</b> The destination is on a card in the windshield.</div>
-      <div class="nk-item"><b>Kids.</b> Under 7 free, ages 7–12 half price. Luggage is free and goes underneath.</div>
+      <div class="nk-item"><b>Kids.</b> Under 7 free, ages 7&#x2013;12 half price. Luggage is free and goes underneath.</div>
       <div class="nk-item"><b>Stuck?</b> Fira taxi rank: <b>+30 22860 22555</b>. Bus station: <b>+30 22860 25404</b>. Emergency: <b>112</b>.</div>
       <div class="nk-item"><b>Times are 24-hour.</b> 22:50 means 10:50 p.m.</div>
     </div>
@@ -237,7 +246,7 @@
 
   <p class="fine">
     Official KTEL timetable, revised 14 July 2026.<br>
-    Schedules shift in season — check the printed board at Fira station.
+    Schedules shift in season &#x2014; check the printed board at Fira station.
   </p>
 
 </div>
@@ -248,11 +257,11 @@
 
   /* Official KTEL Santorini timetable, sheet revised 14 July 2026.
      out  = departures from Fira      back = departures toward Fira
-     "e" suffix = EXP express         "s" suffix = ΣΧ school-days only (skipped) */
+     "e" suffix = EXP express         "s" suffix = \u03A3\u03A7 school-days only (skipped) */
   var R = {
     oia: {
       name: "Oia", fare: 2.20, min: 20,
-      stop: "By the car park at the eastern entrance to the village, on the main road. 10–15 min walk from the caldera edge.",
+      stop: "By the car park at the eastern entrance to the village, on the main road. 10\u201315 min walk from the caldera edge.",
       out: ["07:00","08:30","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30s","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30"],
       back:["07:20","08:50","09:50","10:20","10:50","11:20","11:50","12:20","12:50","13:20","13:50s","14:20","14:50","15:20","15:50","16:20","16:50","17:20","17:50","18:20","18:50","19:20","19:50","20:20","20:50","21:20","21:50","22:20","22:50"]
     },
@@ -311,7 +320,7 @@
     }
   };
 
-  var FIRA_STOP = "Fira Central Bus Station — the open paved lot two blocks south of the main square, on 25is Martiou.";
+  var FIRA_STOP = "Fira Central Bus Station \u2014 the open paved lot two blocks south of the main square, on 25is Martiou.";
   var ORDER = ["fira","oia","airport","kamari","perissa","akrotiri","firo","monolithos","vlychada","vourvoulos","athinios"];
   var CHANGE = 5;      // minutes to walk between bays at Fira
   var RATE = 1.1555;   // USD per EUR, 9 Aug 2026
@@ -325,7 +334,7 @@
   function times(list) { return list.map(parse).filter(function (t) { return !t.sch; }); }
   function pad(n) { return (n < 10 ? "0" : "") + n; }
   function clockOf(m) { m = ((m % 1440) + 1440) % 1440; return pad(Math.floor(m / 60)) + ":" + pad(m % 60); }
-  function eur(n) { return "€" + n.toFixed(2); }
+  function eur(n) { return "\u20AC" + n.toFixed(2); }
   function dur(m) {
     if (m < 60) return m + " min";
     var h = Math.floor(m / 60), r = m % 60;
@@ -422,14 +431,14 @@
 
     if (p && p.port) {
       elAnswer.innerHTML =
-        '<div class="leave"><div class="lbl">Ferry port — no fixed timetable</div>' +
+        '<div class="leave"><div class="lbl">Ferry port \u2014 no fixed timetable</div>' +
         '<div class="big"><span class="cd">Buses meet the boats</span></div>' +
         '<div class="arrive">KTEL schedules the port run against the ferry list, so it changes daily.</div></div>' +
         '<ul class="steps"><li><span class="dot">?</span><span><span class="step-main">Ask at Fira bus station</span>' +
         '<span class="step-sub">Tell them your sailing time and they will tell you which bus to take. ' +
-        'Go <b>90 minutes early</b> — the cliff road jams when a ferry unloads.</span></span></li></ul>' +
+        'Go <b>90 minutes early</b> \u2014 the cliff road jams when a ferry unloads.</span></span></li></ul>' +
         '<div class="cost"><span class="amt">' + eur(p.fare) + '</span>' +
-        '<span class="side"><b>per person, cash</b><br>' + (p.viaFira ? "two tickets — you change at Fira" : "one ticket") + '</span></div>';
+        '<span class="side"><b>per person, cash</b><br>' + (p.viaFira ? "two tickets \u2014 you change at Fira" : "one ticket") + '</span></div>';
       elLast.innerHTML = ""; elLater.innerHTML = "";
       return;
     }
@@ -442,12 +451,12 @@
     if (p.tomorrow) {
       head = '<div class="leave bad"><div class="lbl">No more buses today</div>' +
              '<div class="big"><span class="t">' + p.dep.label + '</span><span class="cd">tomorrow morning</span></div>' +
-             '<div class="arrive">Tonight you need a taxi — Fira rank <b>+30 22860 22555</b>.</div></div>';
+             '<div class="arrive">Tonight you need a taxi \u2014 Fira rank <b>+30 22860 22555</b>.</div></div>';
     } else {
       head = '<div class="leave"><div class="lbl">Catch the bus at</div>' +
              '<div class="big"><span class="t">' + p.dep.label + '</span><span class="cd">' +
              (wait <= 0 ? "right now" : "in " + dur(wait)) + '</span></div>' +
-             '<div class="arrive">Arrive about <b>' + clockOf(p.arrive) + '</b> · ' +
+             '<div class="arrive">Arrive about <b>' + clockOf(p.arrive) + '</b> \u00B7 ' +
              dur(p.arrive - p.dep.m) + ' door to door</div></div>';
     }
 
@@ -469,7 +478,7 @@
         '<b>' + label(leg.route) + '</b> bus at ' + leg.dep.label + '</span>' +
         '<span class="step-sub">' +
         (i === 0 ? "Wait at: " + stopOf(leg.from) + " " : "") +
-        (leg.dep.exp ? "This one is marked <b>EXP</b> — it skips the inland villages. " : "") +
+        (leg.dep.exp ? "This one is marked <b>EXP</b> \u2014 it skips the inland villages. " : "") +
         "Ride " + dur(leg.ride) + ", pay <b>" + eur(leg.fare) + "</b> on board." +
         '</span></span></li>';
     });
@@ -477,12 +486,12 @@
     var ticketNote = p.legs.length > 1 ? "two tickets each way" : "one ticket";
     var costBlock = '<div class="cost"><span class="amt">' + eur(p.fare) + '</span>' +
       '<span class="side"><b>per person, one way</b><br>' + ticketNote +
-      ' · about $' + (p.fare * RATE).toFixed(2) + '</span></div>';
+      ' \u00B7 about $' + (p.fare * RATE).toFixed(2) + '</span></div>';
 
     elAnswer.innerHTML = head + '<ul class="steps">' + steps + '</ul>' + costBlock;
 
     /* Last bus home: the question is always "can I get back from where I'm
-       heading?", so this tracks the destination — except when the destination
+       heading?", so this tracks the destination \u2014 except when the destination
        is Fira, where the relevant service is the one leaving where you are. */
     var homeId = to === "fira" ? from : to;
     var homeR = R[homeId];
@@ -497,7 +506,7 @@
       } else if (left < 0) {
         cls = "gone"; cd = "already gone";
         why = "The last bus back to Fira left at " + last.label +
-              ". Call the Fira taxi rank on +30 22860 22555 — there are only about 30 taxis on the island.";
+              ". Call the Fira taxi rank on +30 22860 22555 \u2014 there are only about 30 taxis on the island.";
       } else if (left <= 60) {
         cls = "soon"; cd = "in " + dur(left);
         why = "Head for the stop now. In August a full bus will drive straight past you, and there is no second chance.";
